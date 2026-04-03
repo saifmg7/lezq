@@ -3,709 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة التعليم الإلكتروني | أ. سارة صباح</title>
+    <title>البوابة الأكاديمية | أ. سارة صباح - جامعة دجلة</title>
     
-    <!-- خطوط جوجل (Tajawal) لدعم اللغة العربية بشكل احترافي -->
+    <!-- خطوط جوجل (Tajawal) لدعم اللغة العربية -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     
-    <!-- مكتبة الأيقونات -->
+    <!-- مكتبة الأيقونات (FontAwesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Tajawal', 'sans-serif'],
                     },
                     colors: {
-                        laser: {
-                            red: '#ff003c',
-                            blue: '#00f0ff',
-                            dark: '#0a0a12',
-                            panel: '#13131f'
+                        univ: {
+                            dark: '#0d2748', // الأزرق الداكن المطابق للصورة
+                            primary: '#1e3a8a', 
+                            accent: '#b59410', // الذهبي المطابق للصورة
+                            light: '#f1f5f9'
                         }
-                    },
-                    boxShadow: {
-                        'neon-red': '0 0 10px rgba(255, 0, 60, 0.5), 0 0 20px rgba(255, 0, 60, 0.3)',
-                        'neon-blue': '0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3)',
                     }
                 }
             }
         }
     </script>
-
     <style>
-        /* تأثيرات إضافية CSS Custom Styles */
-        body {
-            font-family: 'Tajawal', sans-serif;
-            scroll-behavior: smooth;
+        html { scroll-behavior: smooth; }
+        .course-card:hover .course-icon {
+            transform: scale(1.1) rotate(-5deg);
+            color: #b59410;
         }
         
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* حركة شريط الأخبار من اليسار لليمين (لأن الموقع عربي RTL) */
+        @keyframes marqueeRTL {
+            0% { transform: translateX(-100vw); }
+            100% { transform: translateX(100vw); }
         }
-        
-        .dark .glass-panel {
-            background: rgba(19, 19, 31, 0.7);
-            border: 1px solid rgba(0, 240, 255, 0.1);
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marqueeRTL 25s linear infinite;
         }
-
-        .nav-link.active {
-            color: #00f0ff;
-            border-bottom: 2px solid #00f0ff;
-            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
-        }
-        
-        .light-mode .nav-link.active {
-            color: #2563eb;
-            border-bottom: 2px solid #2563eb;
-            text-shadow: none;
-        }
-
-        /* شريط التمرير مخصص */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        .dark ::-webkit-scrollbar-track { background: #0a0a12; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00f0ff; }
-        
-        /* تأثير نبض الليزر */
-        @keyframes laser-pulse {
-            0% { box-shadow: 0 0 5px #00f0ff; }
-            50% { box-shadow: 0 0 15px #00f0ff, 0 0 20px #00f0ff; }
-            100% { box-shadow: 0 0 5px #00f0ff; }
-        }
-        .laser-border {
-            border-left: 3px solid #00f0ff;
+        /* إيقاف الحركة عند وقوف مؤشر الماوس */
+        .animate-marquee:hover {
+            animation-play-state: paused;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 transition-colors duration-300 dark:bg-laser-dark dark:text-gray-200" id="bodyElement">
+<body class="bg-univ-light text-slate-900 font-sans antialiased">
 
-    <!-- شريط التنقل العلوي -->
-    <nav class="sticky top-0 z-50 bg-white dark:bg-laser-panel shadow-md transition-colors duration-300 border-b border-gray-200 dark:border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- الشعار والاسم -->
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-laser-blue flex items-center justify-center text-white text-xl font-bold shadow-neon-blue">
-                        س.ص
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-gray-900 dark:text-white">أ. سارة صباح</h1>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">جامعة دجلة - هندسة الليزر والإلكترونيات البصرية</p>
-                    </div>
+    <!-- الترويسة العلوية البيضاء -->
+    <header class="bg-white py-4 relative z-20">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+            
+            <!-- الشعار والنص على اليمين (تم التعديل ليظهر في الجانب الأيمن) -->
+            <div class="flex items-center gap-5">
+                <!-- الشعار الجديد (اللوغو الشخصي) -->
+                <img src="site-logo.jpg" alt="شعار البوابة" class="w-20 h-20 md:w-28 md:h-28 object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/ar/d/d7/Logo_of_Dijlah_University_College.png'">
+                <div class="text-right mt-1">
+                    <h1 class="text-2xl md:text-3xl font-bold text-univ-dark tracking-wide mb-1" style="font-family: 'Tajawal', sans-serif;">
+                        جَامعَة دِجلَة - كُليَّة الهَندسَة
+                    </h1>
+                    <p class="text-sm font-semibold text-univ-dark">بوابة الأستاذة سارة صباح الأكاديمية</p>
                 </div>
+            </div>
 
-                <!-- روابط التنقل (شاشات كبيرة) -->
-                <div class="hidden md:block">
-                    <div class="flex items-baseline space-x-4 space-x-reverse">
-                        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-link active px-3 py-2 rounded-md text-sm font-medium hover:text-laser-blue transition"><i class="fas fa-home ml-2"></i>الرئيسية</button>
-                        <button onclick="switchTab('courses')" id="tab-courses" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-laser-blue transition"><i class="fas fa-book ml-2"></i>المقررات</button>
-                        <button onclick="switchTab('assignments')" id="tab-assignments" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-laser-blue transition"><i class="fas fa-tasks ml-2"></i>الواجبات</button>
-                        <button onclick="switchTab('lab')" id="tab-lab" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-laser-blue transition"><i class="fas fa-microscope ml-2"></i>المختبر الافتراضي</button>
-                    </div>
-                </div>
+            <!-- مساحة فارغة لليسار -->
+            <div></div>
+            
+        </div>
+    </header>
 
-                <!-- أزرار الإعدادات -->
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition" title="تغيير المظهر">
-                        <i id="theme-icon" class="fas fa-moon text-gray-600 dark:text-yellow-400 text-lg"></i>
-                    </button>
-                    <!-- زر القائمة للهواتف -->
-                    <button class="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
+    <!-- شريط التنقل الأزرق الداكن -->
+    <nav class="bg-univ-dark sticky top-0 z-50 border-t-4 border-univ-accent shadow-md">
+        <div class="max-w-7xl mx-auto px-4 overflow-x-auto">
+            <div class="flex justify-center items-stretch h-14 min-w-max">
+                <a href="#hero" class="flex items-center px-6 md:px-8 bg-univ-accent text-white font-bold text-base md:text-lg">الرئيسية</a>
+                <a href="#about" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">السيرة الذاتية</a>
+                <a href="#publications" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">الأبحاث</a>
+                <a href="#teaching" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">التدريس</a>
+                <a href="#publications" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">منشورات</a>
+                <a href="#contact" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">تواصل</a>
             </div>
         </div>
     </nav>
 
-    <!-- المحتوى الرئيسي -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
+    <!-- شريط آخر الأخبار المتحرك -->
+    <div class="bg-univ-accent text-white border-b-2 border-yellow-700 shadow-inner relative z-40">
+        <div class="max-w-7xl mx-auto px-4 flex items-center h-10">
+            <!-- عنوان الشريط (ثابت) -->
+            <div class="bg-red-600 text-white text-xs md:text-sm font-bold px-4 py-1 rounded-l-lg flex items-center gap-2 z-10 shadow-md h-full">
+                <i class="fas fa-bullhorn animate-pulse"></i> آخر الأخبار
+            </div>
+            <!-- النص المتحرك -->
+            <div class="flex-1 overflow-hidden relative h-full flex items-center mr-2">
+                <a href="#teaching" class="animate-marquee text-sm font-medium hover:text-univ-dark transition">
+                    ✨ عاجل: تمت اضافة ملزمة (Wave Propagation) مؤخراً في قسم المقررات والملازم الدراسية. يمكن للطلاب تحميلها الآن!
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- القسم الترحيبي (Hero Section) المطابق للصورة -->
+    <section id="hero" class="relative h-[500px] md:h-[600px] w-full overflow-hidden bg-univ-dark">
+        <!-- صورة الخلفية (صورتك الشخصية) -->
+        <img src="profile.jpg" alt="الأستاذة سارة صباح" class="absolute inset-0 w-full h-full object-cover object-top" onerror="this.src='https://via.placeholder.com/1920x800?text=يرجى+إضافة+profile.jpg'">
         
-        <!-- قسم الرئيسية (Dashboard) -->
-        <div id="section-dashboard" class="content-section block animate-fade-in">
-            <!-- رسالة ترحيبية -->
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-laser-panel dark:to-gray-900 rounded-2xl p-8 mb-8 text-white shadow-lg relative overflow-hidden border border-transparent dark:border-laser-blue/30">
-                <!-- ديكور بصري -->
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-laser-blue to-transparent opacity-50"></div>
-                <div class="absolute -left-20 -top-20 w-64 h-64 bg-laser-blue rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
-                <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-laser-red rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <!-- التدرج اللوني (Gradient) لجعل النص مقروءاً على اليمين -->
+        <div class="absolute inset-0 bg-gradient-to-l from-univ-dark via-univ-dark/70 to-transparent opacity-95"></div>
+
+        <!-- النصوص والأزرار -->
+        <div class="absolute inset-0 flex items-center">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full text-right">
+                <div class="max-w-xl">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-4 drop-shadow-lg">
+                        البوابة الأكاديمية <br>للأستاذة سارة صباح
+                    </h2>
+                    <p class="text-lg md:text-xl text-gray-200 mb-8 font-medium drop-shadow-md">
+                        تطوير المعرفة الهندسية من بغداد إلى العالم
+                    </p>
+                    <a href="#publications" class="inline-flex items-center justify-center px-8 py-3 bg-white text-univ-dark font-bold text-lg rounded shadow-xl hover:bg-gray-100 transition">
+                        استكشف الأبحاث
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- باقي محتوى الموقع -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-24">
+        
+        <!-- قسم السيرة الذاتية -->
+        <section id="about">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl font-extrabold text-univ-dark flex items-center justify-center gap-3">
+                    <i class="fas fa-id-card text-univ-accent text-2xl"></i> النبذة الأكاديمية
+                </h3>
+                <div class="w-24 h-1 bg-univ-accent mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="prose prose-lg text-slate-700">
+                    <h4 class="font-bold text-univ-dark text-xl mb-4">مسيرة علمية وهندسية</h4>
+                    <p>أستاذة في قسم هندسة الليزر والإلكترونيات البصرية بكلية الهندسة - جامعة دجلة. أمتلك شغفاً كبيراً في دمج الجانب النظري بالجانب العملي والتطبيقي لعلوم الفيزياء البصرية.</p>
+                    <p>تتركز اهتماماتي البحثية والتدريسية في مجالات تفاعل الضوء مع المادة، تصميم المنظومات الليزرية، وتطبيقات الإلكترونيات البصرية في التكنولوجيا الحديثة. أهدف دائماً لتخريج مهندسين قادرين على الابتكار في هذا المجال الدقيق.</p>
+                </div>
                 
-                <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div>
-                        <h2 class="text-3xl font-bold mb-2">أهلاً بكم في منصة التعلم الإلكتروني</h2>
-                        <p class="text-blue-100 dark:text-gray-300 text-lg mb-4">الفصل الدراسي الأول 2026 - 2027 | نضيء المستقبل بعلوم الليزر.</p>
-                        <button onclick="switchTab('courses')" class="bg-white text-blue-700 dark:bg-laser-blue dark:text-laser-dark px-6 py-2 rounded-full font-bold hover:shadow-lg transition hover:scale-105">
-                            تصفح المقررات <i class="fas fa-arrow-left mr-2"></i>
-                        </button>
+                <!-- الجدول الزمني (Timeline) -->
+                <div class="relative border-r-2 border-univ-dark/20 pr-8 space-y-10">
+                    <div class="relative">
+                        <div class="absolute -right-[41px] top-1 w-6 h-6 rounded-full bg-univ-accent border-4 border-white shadow-md flex items-center justify-center text-white text-xs">
+                             <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <span class="text-sm font-bold text-univ-accent">الحاضر</span>
+                        <h5 class="font-extrabold text-lg text-univ-dark mt-1">أستاذة جامعية</h5>
+                        <p class="text-sm text-slate-600">جامعة دجلة، كلية الهندسة - قسم هندسة الليزر والإلكترونيات البصرية.</p>
                     </div>
-                    <div class="hidden md:block text-6xl text-white/80 dark:text-laser-blue/80">
-                        <i class="fas fa-satellite-dish fa-spin" style="animation-duration: 10s;"></i>
+                    <div class="relative">
+                        <div class="absolute -right-[41px] top-1 w-6 h-6 rounded-full bg-univ-dark border-4 border-white shadow-md flex items-center justify-center text-white text-xs">
+                             <i class="fas fa-microscope"></i>
+                        </div>
+                        <span class="text-sm font-bold text-univ-accent">باحثة ومستشارة</span>
+                        <h5 class="font-extrabold text-lg text-univ-dark mt-1">البحث العلمي المتقدم</h5>
+                        <p class="text-sm text-slate-600">نشر أبحاث في مجلات علمية رصينة تتعلق بتطبيقات الألياف البصرية والليزر.</p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- إحصائية 1 -->
-                <div class="bg-white dark:bg-laser-panel rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex items-center gap-4 laser-border hover:-translate-y-1 transition">
-                    <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-laser-blue text-xl">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">إجمالي الطلاب</p>
-                        <h3 class="text-2xl font-bold">142</h3>
-                    </div>
-                </div>
-                <!-- إحصائية 2 -->
-                <div class="bg-white dark:bg-laser-panel rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex items-center gap-4 border-l-3 border-l-purple-500 hover:-translate-y-1 transition" style="border-left: 3px solid #a855f7;">
-                    <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 text-xl">
-                        <i class="fas fa-book-open"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">المقررات الفعالة</p>
-                        <h3 class="text-2xl font-bold">3</h3>
-                    </div>
-                </div>
-                <!-- إحصائية 3 -->
-                <div class="bg-white dark:bg-laser-panel rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex items-center gap-4 border-l-3 border-l-laser-red hover:-translate-y-1 transition" style="border-left: 3px solid #ff003c;">
-                    <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-laser-red text-xl">
-                        <i class="fas fa-exclamation-circle"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">تنبيهات هامة</p>
-                        <h3 class="text-2xl font-bold">2</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- الإعلانات والجدول -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- لوحة الإعلانات -->
-                <div class="bg-white dark:bg-laser-panel rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-bold flex items-center gap-2">
-                            <i class="fas fa-bullhorn text-laser-blue"></i> الإعلانات والتبليغات
-                        </h3>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="p-4 rounded-lg bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-800/30">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="bg-red-500 text-white text-xs px-2 py-1 rounded">هام وعاجل</span>
-                                <span class="text-xs text-gray-500">اليوم، 10:00 صباحاً</span>
-                            </div>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">تم تأجيل امتحان مادة "تطبيقات الليزر في الطب" إلى يوم الخميس القادم بدلاً من الثلاثاء. يرجى التبليغ.</p>
-                        </div>
-                        <div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/30">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">مادة دراسية</span>
-                                <span class="text-xs text-gray-500">أمس، 08:30 مساءً</span>
-                            </div>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">تم رفع المحاضرة الرابعة (تفاعل الليزر مع الأنسجة Biological Tissue) بصيغة PDF على صفحة المقرر.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- الجدول الأسبوعي (المحاضرات القادمة) -->
-                <div class="bg-white dark:bg-laser-panel rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
-                    <h3 class="text-xl font-bold flex items-center gap-2 mb-6">
-                        <i class="fas fa-calendar-alt text-purple-500"></i> الجدول الأسبوعي
-                    </h3>
-                    <div class="relative border-r border-gray-200 dark:border-gray-700 pr-4 space-y-6">
-                        <div class="relative">
-                            <div class="absolute -right-[21px] top-1 w-3 h-3 rounded-full bg-laser-blue shadow-neon-blue"></div>
-                            <p class="text-sm text-laser-blue font-bold mb-1">الأحد - 08:30 صباحاً</p>
-                            <h4 class="font-bold text-gray-800 dark:text-white">أساسيات الليزر (نظري)</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">القاعة: 301 - المبنى الرئيسي</p>
-                        </div>
-                        <div class="relative">
-                            <div class="absolute -right-[21px] top-1 w-3 h-3 rounded-full bg-purple-500"></div>
-                            <p class="text-sm text-purple-500 font-bold mb-1">الأثنين - 10:30 صباحاً</p>
-                            <h4 class="font-bold text-gray-800 dark:text-white">الإلكترونيات البصرية (مختبر)</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">القاعة: مختبر البصريات - الطابق الأرضي</p>
-                        </div>
-                        <div class="relative">
-                            <div class="absolute -right-[21px] top-1 w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-                            <p class="text-sm text-gray-500 font-bold mb-1">الأربعاء - 12:30 ظهراً</p>
-                            <h4 class="font-bold text-gray-800 dark:text-white">تطبيقات الليزر في الطب</h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">عبر الإنترنت (Google Meet)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- قسم المقررات (Courses) -->
-        <div id="section-courses" class="content-section hidden animate-fade-in">
-            <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">المقررات الدراسية الحالية</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Course 1 -->
-                <div class="bg-white dark:bg-laser-panel rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-800 group hover:border-laser-blue transition duration-300">
-                    <div class="h-32 bg-gradient-to-br from-blue-600 to-indigo-800 relative flex items-center justify-center overflow-hidden">
-                        <i class="fas fa-wave-square text-5xl text-white opacity-20 absolute z-0 scale-150 group-hover:scale-110 transition duration-500"></i>
-                        <h3 class="relative z-10 text-white font-bold text-xl px-4 text-center">أساسيات الليزر<br><span class="text-sm font-normal">Laser Fundamentals</span></h3>
-                    </div>
-                    <div class="p-5">
-                        <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-3">
-                            <span>المرحلة الثالثة</span>
-                            <span>3 وحدات</span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 h-16">دراسة المبادئ الفيزيائية لعملية الانبعاث المحفز، أنواع الليزرات، وخصائص الشعاع الليزري.</p>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
-                            <div class="bg-laser-blue h-2 rounded-full" style="width: 45%"></div>
-                        </div>
-                        <p class="text-xs text-right text-gray-500 mb-4">تم إنجاز 45% من المنهج</p>
-                        <button class="w-full py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-white rounded-lg font-medium transition text-sm flex items-center justify-center gap-2">
-                            <i class="fas fa-folder-open"></i> الدخول للمقرر
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Course 2 -->
-                <div class="bg-white dark:bg-laser-panel rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-800 group hover:border-purple-500 transition duration-300">
-                    <div class="h-32 bg-gradient-to-br from-purple-600 to-pink-700 relative flex items-center justify-center overflow-hidden">
-                        <i class="fas fa-microchip text-5xl text-white opacity-20 absolute z-0 scale-150 group-hover:scale-110 transition duration-500"></i>
-                        <h3 class="relative z-10 text-white font-bold text-xl px-4 text-center">الإلكترونيات البصرية<br><span class="text-sm font-normal">Optoelectronics</span></h3>
-                    </div>
-                    <div class="p-5">
-                        <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-3">
-                            <span>المرحلة الرابعة</span>
-                            <span>4 وحدات</span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 h-16">الكواشف البصرية، الألياف الضوئية، وتطبيقات أشباه الموصلات في البصريات.</p>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
-                            <div class="bg-purple-500 h-2 rounded-full" style="width: 60%"></div>
-                        </div>
-                        <p class="text-xs text-right text-gray-500 mb-4">تم إنجاز 60% من المنهج</p>
-                        <button class="w-full py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-white rounded-lg font-medium transition text-sm flex items-center justify-center gap-2">
-                            <i class="fas fa-folder-open"></i> الدخول للمقرر
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Course 3 -->
-                <div class="bg-white dark:bg-laser-panel rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-800 group hover:border-laser-red transition duration-300">
-                    <div class="h-32 bg-gradient-to-br from-red-600 to-orange-600 relative flex items-center justify-center overflow-hidden">
-                        <i class="fas fa-heartbeat text-5xl text-white opacity-20 absolute z-0 scale-150 group-hover:scale-110 transition duration-500"></i>
-                        <h3 class="relative z-10 text-white font-bold text-xl px-4 text-center">تطبيقات الليزر في الطب<br><span class="text-sm font-normal">Medical Lasers</span></h3>
-                    </div>
-                    <div class="p-5">
-                        <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-3">
-                            <span>المرحلة الرابعة (اختياري)</span>
-                            <span>2 وحدات</span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 h-16">تفاعل الليزر مع الأنسجة الحية، جراحة العيون بالليزر، وتطبيقات الجلدية.</p>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
-                            <div class="bg-laser-red h-2 rounded-full" style="width: 30%"></div>
-                        </div>
-                        <p class="text-xs text-right text-gray-500 mb-4">تم إنجاز 30% من المنهج</p>
-                        <button class="w-full py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-white rounded-lg font-medium transition text-sm flex items-center justify-center gap-2">
-                            <i class="fas fa-folder-open"></i> الدخول للمقرر
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- قسم الواجبات (Assignments) -->
-        <div id="section-assignments" class="content-section hidden animate-fade-in">
-            <h2 class="text-2xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">الواجبات والتقارير المطلوبة</h2>
-            <div class="bg-white dark:bg-laser-panel rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right">
-                        <thead class="bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 text-sm">
-                            <tr>
-                                <th class="p-4 font-semibold">عنوان الواجب</th>
-                                <th class="p-4 font-semibold">المقرر</th>
-                                <th class="p-4 font-semibold">تاريخ التسليم</th>
-                                <th class="p-4 font-semibold">الحالة</th>
-                                <th class="p-4 font-semibold text-center">الإجراء</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-800 text-sm">
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/20 transition">
-                                <td class="p-4 font-medium text-gray-800 dark:text-white">تقرير: أنواع المتذبذبات الليزرية</td>
-                                <td class="p-4 text-gray-600 dark:text-gray-400">أساسيات الليزر</td>
-                                <td class="p-4 text-laser-red">الخميس، 15 أبريل 2026</td>
-                                <td class="p-4"><span class="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-2 py-1 rounded text-xs">مطلوب تسليمه</span></td>
-                                <td class="p-4 text-center">
-                                    <button class="text-laser-blue hover:text-blue-700 underline text-xs"><i class="fas fa-cloud-upload-alt mr-1"></i> رفع الملف</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/20 transition">
-                                <td class="p-4 font-medium text-gray-800 dark:text-white">مسائل حساب كفاءة الليزر</td>
-                                <td class="p-4 text-gray-600 dark:text-gray-400">أساسيات الليزر</td>
-                                <td class="p-4 text-gray-500">تم التسليم</td>
-                                <td class="p-4"><span class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-1 rounded text-xs">مكتمل - تم التقييم (9/10)</span></td>
-                                <td class="p-4 text-center">
-                                    <button class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-xs"><i class="fas fa-eye mr-1"></i> عرض الملاحظات</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/20 transition">
-                                <td class="p-4 font-medium text-gray-800 dark:text-white">تصميم دائرة كاشف ضوئي</td>
-                                <td class="p-4 text-gray-600 dark:text-gray-400">الإلكترونيات البصرية</td>
-                                <td class="p-4 text-yellow-600 dark:text-yellow-500">الأحد، 25 أبريل 2026</td>
-                                <td class="p-4"><span class="bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 px-2 py-1 rounded text-xs">متاح الآن</span></td>
-                                <td class="p-4 text-center">
-                                    <button class="text-laser-blue hover:text-blue-700 underline text-xs"><i class="fas fa-download mr-1"></i> تحميل التعليمات</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- قسم المختبر الافتراضي (Virtual Lab - Special Feature) -->
-        <div id="section-lab" class="content-section hidden animate-fade-in">
+        <!-- قسم المقررات والتدريس -->
+        <section id="teaching" class="bg-slate-50 rounded-3xl p-8 md:p-12 border border-gray-100">
             <div class="text-center mb-10">
-                <i class="fas fa-vr-cardboard text-5xl text-laser-blue mb-4 shadow-neon-blue rounded-full p-2"></i>
-                <h2 class="text-3xl font-bold mb-2">المختبر الافتراضي والمحاكاة</h2>
-                <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">تجارب تفاعلية حية لفهم سلوك الضوء والليزر وتطبيقاته عملياً برمجياً.</p>
+                <h3 class="text-3xl font-extrabold text-univ-dark flex items-center justify-center gap-3">
+                    <i class="fas fa-laptop-code text-univ-accent text-2xl"></i> المقررات والملازم الدراسية
+                </h3>
+                <div class="w-24 h-1 bg-univ-accent mx-auto mt-4 rounded-full"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- تجربة 1: محاكاة تجويف الليزر -->
-                <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group flex flex-col">
-                    <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-laser-blue to-purple-500"></div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800 dark:text-white">محاكاة تجويف الليزر (Laser Cavity)</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-6 flex-grow">اضغط على الزر لبدء الضخ البصري (Optical Pumping). لاحظ كيف تتكاثر الفوتونات بين المرآتين قبل أن يتجاوز الشعاع المرآة شبه المنفذة لتوليد الليزر.</p>
-                    
-                    <div class="w-full h-40 bg-gray-900 rounded-lg mb-6 flex items-center justify-center border border-gray-700 relative overflow-hidden" id="laser-cavity-container" dir="ltr">
-                        <!-- المرآة العاكسة كلياً (اليسار) -->
-                        <div class="absolute left-6 w-2 h-24 bg-gray-300 rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.8)] z-10"></div>
-                        <!-- المرآة شبه المنفذة (اليمين) -->
-                        <div class="absolute right-6 w-2 h-24 bg-blue-300/40 rounded-sm z-10 border-r border-blue-200/50"></div>
-                        
-                        <!-- الوسط الفعال (Active Medium) -->
-                        <div class="w-3/4 h-16 border border-purple-500/30 bg-purple-900/20 rounded-sm relative flex items-center justify-center overflow-hidden z-0" id="active-medium">
-                            <span class="text-white/20 text-xs font-bold tracking-widest pointer-events-none">ACTIVE MEDIUM</span>
-                        </div>
-                        
-                        <!-- شعاع الليزر الخارج -->
-                        <div class="absolute right-6 w-0 h-3 bg-laser-red shadow-neon-red hidden transition-all duration-1000 ease-in-out z-20 origin-left rounded-r-full" id="output-beam" style="left: calc(100% - 1.5rem);"></div>
+            <!-- خيارات تصفية المراحل -->
+            <div class="flex justify-center gap-4 mb-10">
+                <button class="px-6 py-2.5 bg-univ-dark text-white font-bold rounded-full shadow-md hover:bg-univ-primary transition duration-300">
+                    المرحلة الثانية
+                </button>
+                <button class="px-6 py-2.5 bg-white text-univ-dark border border-gray-200 font-bold rounded-full shadow-sm hover:bg-gray-50 transition duration-300">
+                    المرحلة الثالثة
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- مقرر 1: Wave Propagation (انتشار الموجات) -->
+                <div class="course-card bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden border border-gray-100 flex flex-col">
+                    <div class="flex items-center justify-between mb-4 relative z-10">
+                        <i class="course-icon fas fa-broadcast-tower text-4xl text-univ-dark transition-all duration-300"></i>
+                        <span class="text-xs font-bold text-white bg-red-600 px-3 py-1 rounded-full animate-pulse shadow-md">ملزمة متوفرة</span>
                     </div>
-                    <button onclick="toggleLaser()" id="laser-btn" class="w-full py-3 bg-laser-blue text-laser-dark font-bold rounded-lg hover:bg-blue-400 transition shadow-neon-blue mt-auto flex items-center justify-center gap-2">
-                        <i class="fas fa-bolt"></i> بدأ الضخ البصري
-                    </button>
+                    <h4 class="font-extrabold text-xl text-univ-dark mb-1" dir="ltr" style="text-align: right;">Wave Propagation</h4>
+                    <h5 class="font-bold text-md text-univ-accent mb-3">انتشار الموجات</h5>
+                    <p class="text-sm text-slate-600 mb-6 flex-grow">يحتوي على بنك الأسئلة الشامل (100 سؤال) يشمل خيارات متعددة، أسئلة شرح، مقارنات، ومسائل رياضية محلولة.</p>
+                    <a href="wave_propagation_bank.html" target="_blank" class="w-full py-2.5 bg-univ-dark hover:bg-univ-accent text-white font-bold rounded-lg transition shadow-md flex items-center justify-center gap-2 btn-download">
+                        <i class="fas fa-laptop-code text-blue-400 transition-colors text-lg"></i> فتح برنامج الأسئلة التفاعلي
+                    </a>
                 </div>
 
-                <!-- تجربة 2: انكسار وانعكاس الضوء -->
-                <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group flex flex-col">
-                    <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800 dark:text-white">انكسار وانعكاس الضوء</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">قانون سنيل (Snell's Law). قم بتحريك الشريط لتغيير زاوية السقوط ولاحظ حساب زاوية الانكسار برمجياً لحظياً عند الانتقال من الهواء للزجاج.</p>
-                    
-                    <div class="w-full h-40 bg-gray-900 rounded-lg mb-4 relative flex items-center justify-center border border-gray-700" dir="ltr">
-                         <canvas id="refractionCanvas" class="w-full h-full rounded-lg absolute top-0 left-0"></canvas>
+                <!-- مقرر 2 -->
+                <div class="course-card bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden border border-gray-100">
+                    <div class="flex items-center justify-between mb-4 relative z-10">
+                        <i class="course-icon fas fa-microchip text-4xl text-univ-accent transition-all duration-300"></i>
+                        <span class="text-xs font-bold text-univ-accent bg-univ-accent/10 px-3 py-1 rounded-full">متقدم</span>
                     </div>
-                    
-                    <div class="flex items-center gap-4 mb-4" dir="ltr">
-                        <span id="angleValue" class="text-sm text-laser-blue font-bold w-12 text-center">45°</span>
-                        <input type="range" id="angleSlider" min="5" max="85" value="45" class="w-full accent-purple-500 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer" oninput="drawRefraction()">
-                        <label class="text-xs text-gray-300 w-24 text-right">زاوية السقوط</label>
+                    <h4 class="font-extrabold text-xl text-univ-dark mb-2">الإلكترونيات البصرية</h4>
+                    <p class="text-sm text-slate-600 mb-6 h-12 line-clamp-2">الكواشف البصرية، الألياف الضوئية، وتطبيقات أشباه الموصلات.</p>
+                    <a href="#" class="w-full py-2 bg-gray-50 hover:bg-univ-accent hover:text-white text-slate-700 font-bold rounded-lg transition border border-gray-200 flex items-center justify-center gap-2">
+                        <i class="fas fa-link"></i> صفحة المقرر
+                    </a>
+                </div>
+                
+                <!-- مقرر 3 -->
+                <div class="course-card bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden border border-gray-100">
+                    <div class="flex items-center justify-between mb-4 relative z-10">
+                        <i class="course-icon fas fa-project-diagram text-4xl text-blue-800 transition-all duration-300"></i>
+                        <span class="text-xs font-bold text-blue-800 bg-blue-100 px-3 py-1 rounded-full">عملي</span>
                     </div>
-
-                    <button onclick="resetRefraction()" class="w-full py-2 bg-gray-700 text-white font-medium rounded-lg hover:bg-gray-600 transition shadow-md mt-auto flex items-center justify-center gap-2">
-                        <i class="fas fa-undo text-sm"></i> إعادة ضبط الزاوية
-                    </button>
+                    <h4 class="font-extrabold text-xl text-univ-dark mb-2">مختبر البصريات</h4>
+                    <p class="text-sm text-slate-600 mb-6 h-12 line-clamp-2">تجارب عملية في الانكسار، الانعكاس، والتداخل باستخدام معدات متقدمة.</p>
+                    <a href="#" class="w-full py-2 bg-gray-50 hover:bg-blue-800 hover:text-white text-slate-700 font-bold rounded-lg transition border border-gray-200 flex items-center justify-center gap-2">
+                        <i class="fas fa-link"></i> صفحة المقرر
+                    </a>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- قسم التواصل -->
+        <section id="contact" class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start bg-univ-dark rounded-3xl p-10 md:p-16 text-white shadow-2xl relative overflow-hidden">
+            <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-white rounded-full opacity-5 blur-3xl"></div>
+            
+            <div class="md:col-span-5 relative z-10">
+                <h3 class="text-3xl font-extrabold flex items-center gap-3">
+                    <i class="fas fa-envelope-open-text text-univ-accent text-2xl"></i> تواصل معي
+                </h3>
+                <p class="text-slate-300 mt-4 mb-10">للزملاء الباحثين، والطلاب للاستفسارات الأكاديمية المتعلقة بمقررات الليزر والإلكترونيات البصرية.</p>
+                
+                <div class="space-y-6 text-sm">
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-map-marker-alt text-xl text-univ-accent w-8 text-center"></i>
+                        <span>جامعة دجلة، كلية الهندسة - بغداد، العراق</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نموذج التواصل -->
+            <form class="md:col-span-7 bg-white p-8 rounded-2xl shadow-lg space-y-5 text-slate-900 relative z-10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <input type="text" placeholder="الاسم الكامل" class="p-3.5 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-univ-dark transition text-sm outline-none">
+                    <input type="email" placeholder="البريد الإلكتروني" class="p-3.5 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-univ-dark transition text-sm outline-none">
+                </div>
+                <input type="text" placeholder="الموضوع" class="w-full p-3.5 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-univ-dark transition text-sm outline-none">
+                <textarea placeholder="رسالتك..." rows="4" class="w-full p-3.5 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-univ-dark transition text-sm outline-none"></textarea>
+                <button type="button" class="w-full py-3.5 bg-univ-accent text-white font-bold rounded-xl hover:bg-yellow-600 transition shadow-lg">
+                    إرسال
+                </button>
+            </form>
+        </section>
 
     </main>
 
     <!-- تذييل الصفحة -->
-    <footer class="bg-white dark:bg-laser-panel border-t border-gray-200 dark:border-gray-800 mt-12 py-8 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-500 dark:text-gray-400 text-sm">
-                &copy; 2026 المنصة التعليمية لـ أ. سارة صباح - جامعة دجلة، قسم هندسة الليزر والإلكترونيات البصرية.
-            </p>
-            <div class="flex justify-center gap-4 mt-4 text-gray-400 dark:text-gray-500">
-                <a href="https://www.facebook.com/sabah.sarah.39" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 transition" title="حساب الفيسبوك"><i class="fab fa-facebook text-xl"></i></a>
-                <a href="#" class="hover:text-laser-blue transition" title="ResearchGate"><i class="fab fa-researchgate text-xl"></i></a>
-                <a href="#" class="hover:text-laser-blue transition" title="البريد الإلكتروني"><i class="fas fa-envelope text-xl"></i></a>
-                <a href="#" class="hover:text-laser-blue transition" title="لينكد إن"><i class="fab fa-linkedin text-xl"></i></a>
+    <footer class="bg-white border-t border-gray-100 py-10 text-center mt-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-xl font-bold text-univ-dark">أ. سارة صباح</h2>
+            <p class="text-sm text-slate-500 mb-6">كلية الهندسة - جامعة دجلة</p>
+            
+            <div class="flex justify-center gap-5 mt-4 text-slate-400">
+                <a href="https://www.facebook.com/sabah.sarah.39" target="_blank" class="hover:text-[#1877F2] transition text-2xl" title="فيسبوك">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" class="hover:text-univ-dark transition text-2xl" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
             </div>
+            
+            <p class="text-xs text-slate-400 mt-8 border-t border-gray-100 pt-6">
+                &copy; 2026 جميع الحقوق محفوظة.
+            </p>
         </div>
     </footer>
 
-    <!-- سكربتات التفاعل (JavaScript) -->
-    <script>
-        // إعداد الوضع الليلي والنهاري
-        const body = document.getElementById('bodyElement');
-        const themeIcon = document.getElementById('theme-icon');
-        
-        // التحقق من الإعداد المسبق للمستخدم
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            body.classList.add('dark');
-            body.classList.remove('light-mode');
-            themeIcon.classList.replace('fa-moon', 'fa-sun');
-        } else {
-            body.classList.remove('dark');
-            body.classList.add('light-mode');
-            themeIcon.classList.replace('fa-sun', 'fa-moon');
-        }
-
-        function toggleDarkMode() {
-            if (body.classList.contains('dark')) {
-                body.classList.remove('dark');
-                body.classList.add('light-mode');
-                localStorage.theme = 'light';
-                themeIcon.classList.replace('fa-sun', 'fa-moon');
-            } else {
-                body.classList.add('dark');
-                body.classList.remove('light-mode');
-                localStorage.theme = 'dark';
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
-            }
-        }
-
-        // نظام التنقل بين الأقسام (Tabs)
-        function switchTab(tabId) {
-            // إخفاء كل الأقسام
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.add('hidden');
-                section.classList.remove('block');
-            });
-            
-            // إزالة التفعيل من كل الأزرار
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active', 'text-laser-blue', 'dark:text-laser-blue');
-                link.classList.add('text-gray-600', 'dark:text-gray-300');
-            });
-
-            // إظهار القسم المطلوب
-            const activeSection = document.getElementById(`section-${tabId}`);
-            if(activeSection) {
-                activeSection.classList.remove('hidden');
-                activeSection.classList.add('block');
-            }
-
-            // تفعيل الزر المطلوب
-            const activeBtn = document.getElementById(`tab-${tabId}`);
-            if(activeBtn) {
-                activeBtn.classList.add('active');
-                activeBtn.classList.remove('text-gray-600', 'dark:text-gray-300');
-            }
-            
-            // التمرير لأعلى الصفحة بنعومة
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // تحديث رسمة الانكسار عند الدخول لقسم المختبر
-            if (tabId === 'lab') {
-                setTimeout(drawRefraction, 100);
-            }
-        }
-
-        // ==========================================
-        // أكواد محاكاة المختبر الافتراضي (التفاعلية)
-        // ==========================================
-
-        // 1. محاكاة تجويف الليزر
-        let laserInterval;
-        let isLaserActive = false;
-        
-        function toggleLaser() {
-            const btn = document.getElementById('laser-btn');
-            const medium = document.getElementById('active-medium');
-            const beam = document.getElementById('output-beam');
-            
-            if (isLaserActive) {
-                // إيقاف الضخ
-                clearInterval(laserInterval);
-                const photons = medium.querySelectorAll('.photon-particle');
-                photons.forEach(p => p.remove());
-                
-                beam.classList.add('hidden');
-                beam.style.width = '0px';
-                
-                btn.innerHTML = '<i class="fas fa-bolt"></i> بدأ الضخ البصري';
-                btn.classList.replace('bg-red-500', 'bg-laser-blue');
-                btn.classList.replace('hover:bg-red-600', 'hover:bg-blue-400');
-                btn.classList.replace('shadow-neon-red', 'shadow-neon-blue');
-                btn.classList.replace('text-white', 'text-laser-dark');
-                isLaserActive = false;
-            } else {
-                // بدأ الضخ
-                btn.innerHTML = '<i class="fas fa-stop"></i> إيقاف الضخ';
-                btn.classList.replace('bg-laser-blue', 'bg-red-500');
-                btn.classList.replace('hover:bg-blue-400', 'hover:bg-red-600');
-                btn.classList.replace('shadow-neon-blue', 'shadow-neon-red');
-                btn.classList.replace('text-laser-dark', 'text-white');
-                isLaserActive = true;
-                
-                createPhotons();
-                laserInterval = setInterval(createPhotons, 150);
-                
-                // محاكاة الوصول لتجاوز العتبة وخروج الشعاع
-                setTimeout(() => {
-                    if(isLaserActive) {
-                        beam.classList.remove('hidden');
-                        setTimeout(() => {
-                            beam.style.width = '250px'; 
-                        }, 50);
-                    }
-                }, 1200);
-            }
-        }
-        
-        function createPhotons() {
-            const medium = document.getElementById('active-medium');
-            if(!medium) return;
-            
-            for(let i=0; i<3; i++) {
-                const photon = document.createElement('div');
-                const top = Math.random() * 90;
-                photon.className = 'photon-particle absolute w-2 h-2 rounded-full bg-laser-red shadow-neon-red opacity-0 z-10';
-                photon.style.top = `${top}%`;
-                photon.style.left = '5%';
-                
-                medium.appendChild(photon);
-                
-                // حركة الفوتونات بين المرآتين
-                photon.animate([
-                    { left: '5%', opacity: 0 },
-                    { opacity: 1, offset: 0.1 },
-                    { left: '95%', offset: 0.45 },
-                    { left: '95%', offset: 0.5 },
-                    { left: '5%', offset: 0.95 },
-                    { left: '5%', opacity: 0 }
-                ], {
-                    duration: 800 + Math.random() * 400,
-                    iterations: 1,
-                    easing: 'linear'
-                });
-                
-                setTimeout(() => photon.remove(), 1200);
-            }
-        }
-
-        // 2. محاكاة الانكسار والانعكاس (Canvas & Snell's Law)
-        function drawRefraction() {
-            const canvas = document.getElementById('refractionCanvas');
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-            
-            // ضبط دقة اللوحة
-            canvas.width = canvas.parentElement.offsetWidth;
-            canvas.height = canvas.parentElement.offsetHeight;
-            
-            const w = canvas.width;
-            const h = canvas.height;
-            const midX = w / 2;
-            const midY = h / 2;
-
-            ctx.clearRect(0, 0, w, h);
-
-            // رسم الوسط الثاني (الزجاج / الماء) في النصف السفلي
-            ctx.fillStyle = 'rgba(0, 240, 255, 0.1)'; 
-            ctx.fillRect(0, midY, w, h / 2);
-            
-            // الخط الفاصل بين الوسطين
-            ctx.beginPath();
-            ctx.moveTo(0, midY);
-            ctx.lineTo(w, midY);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // العمود المقام الوهمي
-            ctx.beginPath();
-            ctx.setLineDash([5, 5]);
-            ctx.moveTo(midX, 0);
-            ctx.lineTo(midX, h);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // قراءة قيمة الزاوية من الشريط
-            const slider = document.getElementById('angleSlider');
-            if(!slider) return;
-            const angleDeg = parseFloat(slider.value);
-            document.getElementById('angleValue').innerText = angleDeg + '°';
-            
-            // تحويل الزاوية إلى راديان للحسابات
-            const angleRad = angleDeg * Math.PI / 180;
-            
-            // معاملات الانكسار: هواء=1.0، زجاج=1.5
-            const n1 = 1.0; 
-            const n2 = 1.5; 
-            const rayLength = Math.max(w, h); 
-            
-            // رسم الشعاع الساقط
-            const incX = midX - rayLength * Math.sin(angleRad);
-            const incY = midY - rayLength * Math.cos(angleRad);
-            
-            ctx.beginPath();
-            ctx.moveTo(incX, incY);
-            ctx.lineTo(midX, midY);
-            ctx.strokeStyle = '#ff003c'; 
-            ctx.lineWidth = 3;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = '#ff003c';
-            ctx.stroke();
-
-            // رسم الشعاع المنعكس (زاوية السقوط = زاوية الانعكاس)
-            const refX = midX + rayLength * Math.sin(angleRad);
-            const refY = midY - rayLength * Math.cos(angleRad);
-            
-            ctx.beginPath();
-            ctx.moveTo(midX, midY);
-            ctx.lineTo(refX, refY);
-            ctx.strokeStyle = 'rgba(255, 0, 60, 0.4)'; 
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // رسم الشعاع المنكسر (استخدام قانون سنيل)
-            const sinT2 = (n1 * Math.sin(angleRad)) / n2;
-            if (sinT2 <= 1) { 
-                const angleT2 = Math.asin(sinT2);
-                const refrX = midX + rayLength * Math.sin(angleT2);
-                const refrY = midY + rayLength * Math.cos(angleT2);
-                
-                ctx.beginPath();
-                ctx.moveTo(midX, midY);
-                ctx.lineTo(refrX, refrY);
-                ctx.strokeStyle = '#ff003c';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-                
-                // إظهار قيمة زاوية الانكسار المكتشفة
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = '#00f0ff';
-                ctx.font = 'bold 12px Tajawal';
-                ctx.fillText(`θ₂ ≈ ${(angleT2 * 180 / Math.PI).toFixed(1)}°`, midX + 15, midY + 30);
-            }
-            ctx.shadowBlur = 0;
-        }
-
-        function resetRefraction() {
-            const slider = document.getElementById('angleSlider');
-            if(slider) {
-                slider.value = 45;
-                drawRefraction();
-            }
-        }
-
-        // تحديث رسمة الانكسار عند إعادة تحجيم الشاشة (Responsive)
-        window.addEventListener('resize', () => {
-            const labSection = document.getElementById('section-lab');
-            if(labSection && !labSection.classList.contains('hidden')){
-                drawRefraction();
-            }
-        });
-
-    </script>
 </body>
 </html>
