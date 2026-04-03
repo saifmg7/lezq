@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wave Propagation - Question Bank</title>
+    
+    <!-- Tailwind CSS لتشغيل تنسيقات البرنامج -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- استيراد مكتبات React والأيقونات لتعمل مباشرة على المتصفح -->
+    <script type="importmap">
+        {
+            "imports": {
+                "react": "https://esm.sh/react@18.2.0",
+                "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+                "lucide-react": "https://esm.sh/lucide-react@0.292.0"
+            }
+        }
+    </script>
+    
+    <!-- Babel لتحويل كود React ليفهمه المتصفح -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <!-- الحاوية الأساسية للبرنامج -->
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        // استيراد الدوال الأساسية لتشغيل البرنامج
+        import { createRoot } from 'react-dom/client';
+        
+        // --- بداية كود البرنامج الخاص بكِ بالضبط ---
+        import React, { useState } from 'react';
+        import { BookOpen, CheckCircle, FileText, Printer, List, HelpCircle, Sigma, GitCompare, Download, Globe } from 'lucide-react';
+
+        const quizData = [
+          // ================= 60 MCQ Questions =================
+          { id: 1, category: 'mcq', q: "What generates a static electric field?", options: ["Moving charges", "Static charges", "Alternating current", "Time-varying magnetic field"], a: 1 },
+          { id: 2, category: 'mcq', q: "The magnetic force on a moving charge (Q) with velocity (u) in a magnetic field (B) is given by:", options: ["F = Q / B", "F = Q(u . B)", "F = Q(u × B)", "F = u(Q × B)"], a: 2 },
+          { id: 3, category: 'mcq', q: "The Lorentz Force Equation combining both electric and magnetic forces is:", options: ["F = Q(E + u × B)", "F = Q(E - u × B)", "F = Q(E × B)", "F = Q(E . B) + u"], a: 0 },
+          { id: 4, category: 'mcq', q: "Magnetic force cannot do work on a moving charge because:", options: ["The force is very small", "The force is parallel to the direction of motion", "The force is perpendicular to the direction of motion", "The charge consumes energy"], a: 2 },
+          { id: 5, category: 'mcq', q: "The net magnetic force on a closed circuit carrying a current in a uniform magnetic field is:", options: ["Infinity", "Zero", "I × B", "B × L"], a: 1 },
+          { id: 6, category: 'mcq', q: "The magnetic dipole moment (m) of a loop of area S carrying current I is defined as:", options: ["m = I / S", "m = I + S", "m = I × S", "m = I S a_n"], a: 3 },
+          { id: 7, category: 'mcq', q: "Materials are diamagnetic if their relative permeability (μr) is:", options: ["Much greater than 1", "Equal to 0", "Slightly less than or equal to 1.0", "Greater than 100"], a: 2 },
+          { id: 8, category: 'mcq', q: "In ferromagnetic materials, the relative permeability (μr) is:", options: ["Less than 1", "Much greater than 1", "Equal to 1", "Equal to zero"], a: 1 },
+          { id: 9, category: 'mcq', q: "According to magnetic boundary conditions, the normal component of magnetic flux density (B) is:", options: ["Discontinuous", "Always zero", "Continuous across the boundary", "Equal to the tangential component"], a: 2 },
+          { id: 10, category: 'mcq', q: "The stored energy in an inductor is given by:", options: ["Wm = 0.5 L I^2", "Wm = L I", "Wm = 0.5 L^2 I", "Wm = 2 L I^2"], a: 0 },
+          { id: 11, category: 'mcq', q: "Magnetomotive force (mmf) in magnetic circuits corresponds to which of the following in electric circuits?", options: ["Resistance", "Current", "Electromotive force (emf)", "Conductivity"], a: 2 },
+          { id: 12, category: 'mcq', q: "The dot product of two orthogonal (perpendicular) vectors is equal to:", options: ["1", "Zero", "-1", "Infinity"], a: 1 },
+          { id: 13, category: 'mcq', q: "The cross product of two parallel vectors is equal to:", options: ["Zero", "1", "The sum of the vectors", "The product of their magnitudes"], a: 0 },
+          { id: 14, category: 'mcq', q: "The coordinates of the cylindrical system are:", options: ["x, y, z", "r, θ, φ", "ρ, φ, z", "r, x, y"], a: 2 },
+          { id: 15, category: 'mcq', q: "The coordinates of the spherical system are:", options: ["ρ, φ, z", "r, θ, φ", "x, y, z", "r, y, z"], a: 1 },
+          { id: 16, category: 'mcq', q: "The differential volume element (dv) in the rectangular system is:", options: ["dx dy dz", "ρ dρ dφ dz", "r^2 sinθ dr dθ dφ", "dr dθ dφ"], a: 0 },
+          { id: 17, category: 'mcq', q: "The differential volume element in the cylindrical system is:", options: ["dx dy dz", "ρ dρ dφ dz", "r^2 sinθ dr dθ dφ", "ρ dz dφ"], a: 1 },
+          { id: 18, category: 'mcq', q: "A dynamic field is considered 'quasi-static' if the retardation time (τ) is:", options: ["Much larger than the time period (T)", "Much smaller than the time period (T)", "Equal to the time period (T)", "Always zero"], a: 1 },
+          { id: 19, category: 'mcq', q: "Conduction current density (Jc) is given by the point form of Ohm's law as:", options: ["Jc = ε E", "Jc = σ E", "Jc = μ H", "Jc = ∂D/∂t"], a: 1 },
+          { id: 20, category: 'mcq', q: "Displacement current density (Jd) is produced due to:", options: ["A static magnetic field", "Movement of free electrons", "A time-varying electric field (∂D/∂t)", "Static charges"], a: 2 },
+          { id: 21, category: 'mcq', q: "The Poynting Vector (S) represents:", options: ["Charge density", "Radiated power density (E × H)", "Magnetic field only", "Stored energy"], a: 1 },
+          { id: 22, category: 'mcq', q: "According to Gauss's law for electricity, the divergence of electric flux density (∇ . D) equals:", options: ["Zero", "Volume charge density (ρv)", "Magnetic field", "Current density (J)"], a: 1 },
+          { id: 23, category: 'mcq', q: "Gauss's law for magnetism (∇ . B = 0) physically implies:", options: ["Isolated magnetic poles exist", "Non-existence of magnetic monopoles", "Magnetic field is constant", "Charge is conserved"], a: 1 },
+          { id: 24, category: 'mcq', q: "According to Faraday's law, a time-varying magnetic field generates:", options: ["Direct current", "An electric field (∇ × E = -∂B/∂t)", "Static charges", "Another magnetic field"], a: 1 },
+          { id: 25, category: 'mcq', q: "The velocity of electromagnetic wave propagation in free space (c) is given by:", options: ["1 / √(μo εo)", "√(μo / εo)", "μo εo", "1 / (μo εo)"], a: 0 },
+          { id: 26, category: 'mcq', q: "The intrinsic impedance of free space (ηo) is approximately:", options: ["50 Ω", "120π Ω (about 377 Ω)", "300 Ω", "0 Ω"], a: 1 },
+          { id: 27, category: 'mcq', q: "The attenuation constant (α) in good conductors is directly proportional to:", options: ["The inverse of frequency", "The square root of frequency (√f)", "The square of frequency", "It does not depend on frequency"], a: 1 },
+          { id: 28, category: 'mcq', q: "Skin Depth (δ) is defined as:", options: ["The distance where the field doubles", "The distance where the field decays to 37% (1/e) of its original value", "The total depth of the conductor", "The critical frequency"], a: 1 },
+          { id: 29, category: 'mcq', q: "Phase Velocity (Vp) is calculated from the relation:", options: ["Vp = ω / k", "Vp = k / ω", "Vp = dω / dk", "Vp = ω * k"], a: 0 },
+          { id: 30, category: 'mcq', q: "Group Velocity (Vg) is calculated from the relation:", options: ["Vg = ω / k", "Vg = dω / dk", "Vg = k / ω", "Vg = 1 / ω"], a: 1 },
+          { id: 31, category: 'mcq', q: "In a non-dispersive medium, group velocity Vg compared to phase velocity Vp is:", options: ["Vg > Vp", "Vg < Vp", "Vg = Vp", "Vg = 0"], a: 2 },
+          { id: 32, category: 'mcq', q: "Snell's Law for refraction states that:", options: ["θi = θr", "n1 sin(θi) = n2 sin(θt)", "n1 cos(θi) = n2 cos(θt)", "n1 / sin(θi) = n2 / sin(θt)"], a: 1 },
+          { id: 33, category: 'mcq', q: "The law of reflection states that the angle of incidence (θi):", options: ["Equals the angle of refraction", "Equals the angle of reflection (θr)", "Is twice the angle of reflection", "Is half the angle of reflection"], a: 1 },
+          { id: 34, category: 'mcq', q: "Brewster's Angle is the angle at which:", options: ["Total internal reflection occurs", "Reflectivity for P-polarization (TM) is zero", "Reflectivity for S-polarization is zero", "Refraction vanishes"], a: 1 },
+          { id: 35, category: 'mcq', q: "Total Internal Reflection occurs when:", options: ["A wave travels from a less dense to a more dense medium", "The angle of incidence is greater than the critical angle (θi > θc)", "The angle of incidence is zero", "The refractive indices are equal"], a: 1 },
+          { id: 36, category: 'mcq', q: "TE (Transverse Electric) polarization is also known as:", options: ["P-polarization", "S-polarization", "Circular polarization", "Unpolarized"], a: 1 },
+          { id: 37, category: 'mcq', q: "TM (Transverse Magnetic) polarization is also known as:", options: ["P-polarization", "S-polarization", "Elliptical polarization", "Longitudinal"], a: 0 },
+          { id: 38, category: 'mcq', q: "An Evanescent Wave is a wave that:", options: ["Travels for very long distances", "Decays exponentially in amplitude with distance normal to the boundary", "Is unaffected by the medium", "Occurs only in a vacuum"], a: 1 },
+          { id: 39, category: 'mcq', q: "Electric energy density (UE) in a vacuum is equal to:", options: ["0.5 μo H^2", "0.5 εo E^2", "εo E", "μo H"], a: 1 },
+          { id: 40, category: 'mcq', q: "Radiation Pressure is calculated using the formula:", options: ["P = S / c", "P = S * c", "P = c / S", "P = E × H"], a: 0 },
+          { id: 41, category: 'mcq', q: "The linear momentum density of an electromagnetic wave equals:", options: ["S / c", "S / c^2", "S * c", "E / c"], a: 1 },
+          { id: 42, category: 'mcq', q: "If a wave is incident normally (Normal Incidence) from medium (n1) to medium (n2), the reflection coefficient (r) is:", options: ["(n1 + n2)/(n1 - n2)", "(n1 - n2)/(n1 + n2)", "n1 / n2", "n2 / n1"], a: 1 },
+          { id: 43, category: 'mcq', q: "Transmittance (T) and Reflectance (R) are related by:", options: ["T = R", "T = 1 + R", "T = 1 - R", "T * R = 1"], a: 2 },
+          { id: 44, category: 'mcq', q: "The Skin Depth for Direct Current (DC) equals:", options: ["Zero", "1 meter", "Infinity (the field fully penetrates the conductor)", "1 mm"], a: 2 },
+          { id: 45, category: 'mcq', q: "Good conductive materials (like copper) behave towards electromagnetic waves as:", options: ["Highly transparent", "Opaque (they reflect and absorb most energy)", "Wave amplifiers", "Non-influential"], a: 1 },
+          { id: 46, category: 'mcq', q: "Which of the following equations represents Ampere's Law as corrected by Maxwell?", options: ["∇ × E = -∂B/∂t", "∇ . D = ρ", "∇ × H = J + ∂D/∂t", "∇ . B = 0"], a: 2 },
+          { id: 47, category: 'mcq', q: "Electric flux density D is defined as:", options: ["D = μ H", "D = ε E", "D = σ E", "D = E / ε"], a: 1 },
+          { id: 48, category: 'mcq', q: "A Unit Vector has a magnitude equal to:", options: ["Zero", "The volume of the original vector", "One (1)", "Infinity"], a: 2 },
+          { id: 49, category: 'mcq', q: "Vector addition obeys the law(s) of:", options: ["Non-commutative", "Commutative and Associative", "Direction change", "Dot product only"], a: 1 },
+          { id: 50, category: 'mcq', q: "In magnetic circuits, permeability (μ) corresponds to which property in electric circuits?", options: ["Resistance R", "Current I", "Conductivity σ", "Voltage V"], a: 2 },
+          { id: 51, category: 'mcq', q: "The total magnetic flux passing through a closed surface is always equal to:", options: ["Surface charge", "Zero (Gauss's law for magnetism)", "Current density", "Infinity"], a: 1 },
+          { id: 52, category: 'mcq', q: "Polarization Current arises in:", options: ["Vacuum", "Good conductors", "Dielectric materials", "Permanent magnets"], a: 2 },
+          { id: 53, category: 'mcq', q: "Wavelength (λ), frequency (f), and wave speed (v) are related by:", options: ["v = λ / f", "λ = v * f", "v = λ * f", "f = λ / v"], a: 2 },
+          { id: 54, category: 'mcq', q: "The position vector in Cartesian coordinates is written as:", options: ["r = x a_x + y a_y + z a_z", "r = x + y + z", "r = ρ a_ρ + z a_z", "r = xyz"], a: 0 },
+          { id: 55, category: 'mcq', q: "The electric permittivity of free space (εo) is approximately:", options: ["4π × 10^-7", "8.854 × 10^-12 F/m", "3 × 10^8", "120π"], a: 1 },
+          { id: 56, category: 'mcq', q: "The magnetic permeability of free space (μo) is approximately:", options: ["8.854 × 10^-12", "4π × 10^-7 H/m", "1 / (36π × 10^9)", "3 × 10^8"], a: 1 },
+          { id: 57, category: 'mcq', q: "The tractive force across a single air gap in an electromagnet is:", options: ["F = B^2 S / 2μo", "F = B S", "F = 0.5 μo H", "F = B^2 / S"], a: 0 },
+          { id: 58, category: 'mcq', q: "If B = 0, the magnetization M in a vacuum equals:", options: ["Infinity", "1", "Zero", "-1"], a: 2 },
+          { id: 59, category: 'mcq', q: "Mutual Inductance between two circuits (in the absence of ferromagnetic materials) is characterized by:", options: ["M12 > M21", "M12 < M21", "M12 = M21", "M12 = 0"], a: 2 },
+          { id: 60, category: 'mcq', q: "Which of the following equations represents Ohm's Law for magnetic circuits?", options: ["V = I R", "F = m a", "mmf = Flux × Reluctance (F = ψ R)", "B = μ H"], a: 2 },
+
+          // ================= 10 Explanation Questions =================
+          { id: 61, category: 'explain', q: "Explain the concept of 'Retardation Effect' in electromagnetic fields.", a: "It is the time delay between a change in the sources of the field (charges and currents) and the time this change is felt at a distant point in space. This happens because electromagnetic waves travel at a finite speed (the speed of light c)." },
+          { id: 62, category: 'explain', q: "State the main difference between static and dynamic fields.", a: "Static fields do not change with time (frequency = zero) and do not generate radiated waves. Dynamic fields vary with time, support the propagation of electromagnetic waves, and in them, the electric and magnetic fields are coupled." },
+          { id: 63, category: 'explain', q: "What is the physical interpretation of Faraday's Law (∇ × E = -∂B/∂t)?", a: "It states that any time-varying magnetic field induces a circulating electric field. This is the fundamental working principle behind electric generators." },
+          { id: 64, category: 'explain', q: "What is the physical significance of Maxwell's equation (∇ . B = 0)?", a: "It means that magnetic monopoles do not exist in nature. Magnetic field lines are always closed loops that originate from a north pole and end at a south pole." },
+          { id: 65, category: 'explain', q: "Explain the concept of 'Displacement Current' introduced by Maxwell.", a: "It is a fictitious current that does not represent actual movement of charges, but rather the time rate of change of electric flux density (∂D/∂t). Maxwell added it to Ampere's Law to make it consistent for circuits containing capacitors." },
+          { id: 66, category: 'explain', q: "What is the 'Skin Effect' phenomenon in conductors?", a: "It is the phenomenon where the amplitude of an electromagnetic wave decays exponentially as it enters a conductive medium. The current and field are concentrated near the surface of the conductor and virtually vanish after a distance known as the skin depth (usually 5δ)." },
+          { id: 67, category: 'explain', q: "When does Total Internal Reflection occur?", a: "It occurs when a wave travels from a medium with a high refractive index to a medium with a lower refractive index, and the angle of incidence is greater than the 'Critical Angle', causing the wave to be totally reflected back into the first medium." },
+          { id: 68, category: 'explain', q: "What is 'Brewster's Angle'?", a: "It is the angle of incidence at which the reflectivity is entirely zero for a parallel-polarized wave (TM or P-polarization), and the wave is fully transmitted into the second medium." },
+          { id: 69, category: 'explain', q: "What is meant by an 'Evanescent Wave'?", a: "It is a wave that forms during total internal reflection, propagating along the boundary between the two media, while its amplitude decays exponentially and very rapidly in the direction normal to the surface into the second medium." },
+          { id: 70, category: 'explain', q: "Explain the analogies between an electric circuit and a magnetic circuit.", a: "In electricity, we use electromotive force (emf), which corresponds to magnetomotive force (mmf) in magnetism. Current (I) corresponds to Flux (ψ). Resistance (R) corresponds to Reluctance (ℛ). Ohm's Law (V=IR) corresponds to Hopkinson's Law (mmf = ψℛ)." },
+
+          // ================= 10 Comparison Questions =================
+          { id: 71, category: 'compare', q: "Compare Conduction Current and Displacement Current.", a: "Conduction Current (Jc = σE) results from the movement of free electrons in conductors. Displacement Current (Jd = ∂D/∂t) results from a time-varying electric field and occurs even in dielectrics and vacuums." },
+          { id: 72, category: 'compare', q: "Compare TE polarization and TM polarization.", a: "In TE (or S) polarization: The electric field is perpendicular to the plane of incidence. In TM (or P) polarization: The electric field is parallel to the plane of incidence." },
+          { id: 73, category: 'compare', q: "Compare Phase Velocity and Group Velocity.", a: "Phase Velocity (Vp = ω/k) is the speed at which a point of constant phase travels in a wave. Group Velocity (Vg = dω/dk) is the speed at which the wave envelope (information/energy) travels in a dispersive medium." },
+          { id: 74, category: 'compare', q: "Compare Diamagnetic and Ferromagnetic materials.", a: "Diamagnetic: μr ≤ 1, they weakly repel a magnetic field. Ferromagnetic: μr >> 1 (very large), they are strongly attracted to a magnetic field (e.g., iron)." },
+          { id: 75, category: 'compare', q: "Compare the Rectangular coordinate system and the Spherical coordinate system.", a: "Rectangular defines a point by (x, y, z) which are orthogonal distances. Spherical defines a point by (r, θ, φ) where r is radial distance, θ is the angle with the z-axis, and φ is the azimuthal angle in the xy-plane." },
+          { id: 76, category: 'compare', q: "Compare Electric Field Intensity (E) and Magnetic Field Intensity (H).", a: "E is measured in V/m and originates from charges and voltages. H is measured in A/m and originates from moving currents." },
+          { id: 77, category: 'compare', q: "Compare Self-inductance and Mutual Inductance.", a: "Self-inductance (L): Ratio of flux generated in a circuit to the current flowing in the same circuit. Mutual Inductance (M): Ratio of flux passing through one circuit to the current flowing in a neighboring circuit." },
+          { id: 78, category: 'compare', q: "Compare Dispersive and Non-dispersive media.", a: "Non-dispersive: Wave speed is constant for all frequencies (Vg = Vp). Dispersive: Wave speed depends on the frequency (Vg ≠ Vp), which causes signal distortion." },
+          { id: 79, category: 'compare', q: "Compare wave propagation in Free Space and in a Good Conductor.", a: "In Free space: No attenuation (α=0), wave speed equals c. In a Good Conductor: High attenuation (large α), wave decays rapidly (Skin depth), and wave speed is much less than c." },
+          { id: 80, category: 'compare', q: "Compare Magnetic Reluctance and Electrical Resistance.", a: "Resistance (R = l/σS) opposes current flow and dissipates energy (heat). Reluctance (ℛ = l/μS) opposes the path of magnetic flux but does not continuously dissipate energy; rather, energy is stored." },
+
+          // ================= 10 Math Questions =================
+          { id: 81, category: 'math', q: "A charge with mass 1.7e-27 kg and magnitude 1.6e-19 C is moving at a velocity of 83.5 km/s perpendicularly to a 5 mT magnetic field. Calculate the magnetic force.", a: "Solution: F = Q * u * B = (1.6e-19) * (83.5e3) * (5e-3) = 6.68 × 10^-17 Newtons." },
+          { id: 82, category: 'math', q: "Find the cross product A × B for the vectors: A = 2ax - 3ay + az and B = -4ax - 2ay + 5az.", a: "Solution: Using the determinant matrix, the result is: A × B = -13ax - 14ay - 16az." },
+          { id: 83, category: 'math', q: "Convert the point (1, 3, 2) from the Cartesian system to the Spherical system (r, θ, φ).", a: "Solution: r = √(1^2+3^2+2^2) = 3.74. Angle θ = cos^-1(2/3.74) = 57.69°. Angle φ = tan^-1(3/1) = 71.57°." },
+          { id: 84, category: 'math', q: "Calculate the skin depth (δ) for copper at a frequency of 1 GHz, given that conductivity σ = 5.8e7 S/m.", a: "Solution: δ = 1 / √(π f μ σ) = 1 / √(π * 1e9 * 4πe-7 * 5.8e7) = 2.1 micrometers (2.1 μm)." },
+          { id: 85, category: 'math', q: "Calculate the critical angle for glass (n = 1.5) surrounded by air (n = 1).", a: "Solution: θc = sin^-1(n_air / n_glass) = sin^-1(1 / 1.5) = 41.8 degrees." },
+          { id: 86, category: 'math', q: "Calculate Brewster's angle for light traveling from air to glass (n = 1.5).", a: "Solution: θB = tan^-1(n2 / n1) = tan^-1(1.5 / 1) = 56.3 degrees." },
+          { id: 87, category: 'math', q: "A light wave is traveling in glass (n=1.5). If the electric field amplitude is 100 V/m, what is the magnetic field amplitude (H)?", a: "Solution: |H| = n * |E| / ηo = 1.5 * 100 / 376.7 = 0.398 A/m." },
+          { id: 88, category: 'math', q: "Find the magnetic torque (T) on a loop with a dipole moment m = 10 az in a field B = 2.5 ax.", a: "Solution: T = m × B = 10 az × 2.5 ax = 25 ay N.m." },
+          { id: 89, category: 'math', q: "Calculate the electric energy density (UE) for an electric field E = 100 V/m in a vacuum.", a: "Solution: UE = 0.5 * εo * E^2 = 0.5 * 8.854e-12 * (100)^2 = 4.425 × 10^-8 Joules/m^3." },
+          { id: 90, category: 'math', q: "What is the magnitude of the vector G = 2ax - 2ay - az?", a: "Solution: |G| = √(2^2 + (-2)^2 + (-1)^2) = √(4 + 4 + 1) = √9 = 3." },
+
+          // ================= 10 Short Q&A Questions =================
+          { id: 91, category: 'short', q: "What is the unit of measurement for Magnetic Flux?", a: "Magnetic flux is measured in Webers (Wb)." },
+          { id: 92, category: 'short', q: "Which law primarily relates electric current to the magnetic field it produces?", a: "Ampere's Law and the Biot-Savart Law." },
+          { id: 93, category: 'short', q: "Does the magnetic force perform work on a moving charge? Why?", a: "No, because the magnetic force always acts perpendicularly to the direction of the charge's velocity." },
+          { id: 94, category: 'short', q: "What is the result of the divergence of a curl for any vector field?", a: "It is always zero (∇ . (∇ × A) = 0)." },
+          { id: 95, category: 'short', q: "What is the cross product of a vector with itself (A × A)?", a: "It equals zero." },
+          { id: 96, category: 'short', q: "Name three main types of magnetic materials.", a: "Diamagnetic, Paramagnetic, and Ferromagnetic materials." },
+          { id: 97, category: 'short', q: "What is the primary reason for the generation of polarization current?", a: "It is generated due to the time-varying electric field inside dielectric materials." },
+          { id: 98, category: 'short', q: "Which vector represents the direction of propagation and power density of an electromagnetic wave?", a: "The Poynting Vector (S = E × H)." },
+          { id: 99, category: 'short', q: "What happens to the speed of an electromagnetic wave when it enters a dielectric medium compared to a vacuum?", a: "Its speed decreases by a factor equal to the medium's refractive index (v = c / n)." },
+          { id: 100, category: 'short', q: "Write the point form of Ohm's Law.", a: "J = σ E (where J is current density, σ is conductivity, and E is the electric field)." }
+        ];
+
+        export default function QuizApp() {
+          const [activeTab, setActiveTab] = useState('all');
+          const [showAnswers, setShowAnswers] = useState(false);
+
+          const loadGoogleTranslate = () => {
+            if (!document.getElementById('google-translate-script')) {
+              window.googleTranslateElementInit = () => {
+                new window.google.translate.TranslateElement({
+                  pageLanguage: 'en',
+                  layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+                }, 'google_translate_element');
+              };
+              const script = document.createElement('script');
+              script.id = 'google-translate-script';
+              script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+              document.body.appendChild(script);
+            }
+          };
+
+          const exportToWord = () => {
+            setShowAnswers(true); // Show answers before exporting
+            setTimeout(() => {
+              const content = document.getElementById('printable-area').innerHTML;
+              const htmlCode = `
+                <html dir="ltr" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+                <head><meta charset="utf-8"><title>Question Bank</title></head>
+                <body style="font-family: Arial, sans-serif; text-align: left; direction: ltr;">
+                  ${content}
+                </body></html>`;
+              
+              const blob = new Blob(['\ufeff', htmlCode], { type: 'application/msword' });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = 'Electromagnetics_Questions.doc';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }, 500);
+          };
+
+          const filterQuestions = () => {
+            if (activeTab === 'all') return quizData;
+            return quizData.filter(q => q.category === activeTab);
+          };
+
+          const getCategoryTitle = (cat) => {
+            switch(cat) {
+              case 'mcq': return 'Multiple Choice';
+              case 'explain': return 'Explanations';
+              case 'compare': return 'Comparisons';
+              case 'math': return 'Math Problems';
+              case 'short': return 'Short Answers';
+              default: return 'Uncategorized';
+            }
+          };
+
+          return (
+            <div className="min-h-screen bg-slate-50 text-slate-800 font-sans" dir="ltr">
+              
+              {/* Header (Hidden in Print) */}
+              <header className="bg-blue-900 text-white p-6 shadow-md print:hidden relative z-10">
+                <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
+                  <div className="flex flex-col items-start mb-4 md:mb-0">
+                    <div className="flex items-center space-x-4">
+                      <BookOpen size={32} />
+                      <h1 className="text-2xl font-bold">Comprehensive Electromagnetics Question Bank (100 Questions)</h1>
+                    </div>
+                    {/* Google Translate Element Container */}
+                    <div id="google_translate_element" className="mt-2 text-black"></div>
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-3 mt-4 md:mt-0">
+                    <button 
+                      onClick={loadGoogleTranslate}
+                      className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded-lg transition-colors shadow-sm"
+                    >
+                      <Globe size={20} />
+                      <span>Translate</span>
+                    </button>
+                    <button 
+                      onClick={exportToWord}
+                      className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg transition-colors shadow-sm"
+                    >
+                      <Download size={20} />
+                      <span>Export Word</span>
+                    </button>
+                    <button 
+                      onClick={() => { setShowAnswers(true); setTimeout(()=> window.print(), 500); }}
+                      className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg transition-colors shadow-sm"
+                    >
+                      <Printer size={20} />
+                      <span>Print / PDF</span>
+                    </button>
+                  </div>
+                </div>
+              </header>
+
+              {/* Tabs (Hidden in Print) */}
+              <div className="max-w-6xl mx-auto mt-6 px-4 print:hidden">
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {[
+                    { id: 'all', label: 'All (100)', icon: <List size={18} /> },
+                    { id: 'mcq', label: 'Multiple Choice (60)', icon: <CheckCircle size={18} /> },
+                    { id: 'explain', label: 'Explanations (10)', icon: <FileText size={18} /> },
+                    { id: 'compare', label: 'Comparisons (10)', icon: <GitCompare size={18} /> },
+                    { id: 'math', label: 'Math Problems (10)', icon: <Sigma size={18} /> },
+                    { id: 'short', label: 'Short Answers (10)', icon: <HelpCircle size={18} /> }
+                  ].map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold transition-colors ${
+                        activeTab === tab.id 
+                        ? 'bg-blue-900 text-white' 
+                        : 'bg-white text-blue-900 border border-blue-200 hover:bg-blue-50'
+                      }`}
+                    >
+                      {tab.icon}
+                      {tab.label}
+                    </button>
+                  ))}
+                  
+                  <div className="ml-auto flex items-center">
+                     <button
+                       onClick={() => setShowAnswers(!showAnswers)}
+                       className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg transition-colors font-semibold"
+                     >
+                       {showAnswers ? 'Hide Answers' : 'Show All Answers'}
+                     </button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="printable-area">
+                {/* Print Title (Visible only in Print) */}
+                <div className="hidden print:block text-center pt-8 pb-4">
+                  <h1 className="text-3xl font-bold text-black border-b-2 border-black pb-2 inline-block">Comprehensive Electromagnetics Question Bank (100 Questions)</h1>
+                  <p className="mt-2 text-gray-700">A comprehensive review guide for Electromagnetics - Ready for print and export</p>
+                </div>
+
+                {/* Content */}
+                <main className="max-w-6xl mx-auto px-4 pb-12">
+                  <div className="grid grid-cols-1 gap-6">
+                    {filterQuestions().map((item, index) => (
+                      <div key={item.id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 break-inside-avoid">
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="text-lg font-bold text-blue-900 flex-1">
+                            <span className="text-blue-500 mr-2 text-base font-normal">[{item.id}]</span>
+                            {item.q}
+                          </h3>
+                          <span className="bg-slate-100 text-slate-500 text-xs px-2 py-1 rounded-md ml-4 print:hidden whitespace-nowrap">
+                            {getCategoryTitle(item.category)}
+                          </span>
+                        </div>
+
+                      {/* MCQ Options */}
+                      {item.category === 'mcq' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                          {item.options.map((opt, i) => (
+                            <div 
+                              key={i} 
+                              className={`p-3 rounded-lg border text-sm font-medium ${
+                                showAnswers && i === item.a 
+                                ? 'bg-emerald-50 border-emerald-500 text-emerald-800' 
+                                : 'bg-slate-50 border-slate-200 text-slate-700'
+                              }`}
+                            >
+                              <span className="font-bold mr-2 text-slate-400">{i + 1}.</span> {opt}
+                              {showAnswers && i === item.a && <CheckCircle size={16} className="inline-block text-emerald-500 float-right" />}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Text Answers (Explain, Compare, Math, Short) */}
+                      {item.category !== 'mcq' && showAnswers && (
+                        <div className="mt-4 p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-lg rounded-l-none">
+                          <p className="text-emerald-900 leading-relaxed font-medium whitespace-pre-line">
+                            {item.a}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </main>
+              </div>
+
+            </div>
+          );
+        }
+        // --- نهاية كود البرنامج الخاص بكِ ---
+
+        // نقطة الإقلاع لتشغيل React على الصفحة
+        const root = createRoot(document.getElementById('root'));
+        root.render(<QuizApp />);
+    </script>
+</body>
+</html>
