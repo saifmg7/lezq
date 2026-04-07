@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wave Propagation - Question Bank</title>
+    <title>Wave Propagation - Interactive Exam</title>
     
-    <!-- Tailwind CSS لتشغيل تنسيقات البرنامج -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- استيراد مكتبات React والأيقونات لتعمل مباشرة على المتصفح -->
+    <!-- استيراد مكتبات React -->
     <script type="importmap">
         {
             "imports": {
@@ -19,20 +20,20 @@
         }
     </script>
     
-    <!-- Babel لتحويل كود React ليفهمه المتصفح -->
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+        .en-font { font-family: Arial, sans-serif; }
+    </style>
 </head>
 <body>
-    <!-- الحاوية الأساسية للبرنامج -->
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
-        // استيراد الدوال الأساسية لتشغيل البرنامج
         import { createRoot } from 'react-dom/client';
-        
-        // --- بداية كود البرنامج الخاص بكِ بالضبط ---
         import React, { useState } from 'react';
-        import { BookOpen, CheckCircle, FileText, Printer, List, HelpCircle, Sigma, GitCompare, Download, Globe } from 'lucide-react';
+        import { BookOpen, CheckCircle, FileText, List, HelpCircle, Sigma, GitCompare, Globe, PlayCircle } from 'lucide-react';
 
         const quizData = [
           // ================= 60 MCQ Questions =================
@@ -147,45 +148,58 @@
         ];
 
         export default function QuizApp() {
+          const [mode, setMode] = useState('bank');
           const [activeTab, setActiveTab] = useState('all');
-          const [showAnswers, setShowAnswers] = useState(false);
+          
+          const [studentName, setStudentName] = useState('');
+          const [currentQ, setCurrentQ] = useState(0);
+          const [score, setScore] = useState(0);
+          const [selectedOpt, setSelectedOpt] = useState(null);
 
-          const loadGoogleTranslate = () => {
-            if (!document.getElementById('google-translate-script')) {
-              window.googleTranslateElementInit = () => {
-                new window.google.translate.TranslateElement({
-                  pageLanguage: 'en',
-                  layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
-                }, 'google_translate_element');
-              };
-              const script = document.createElement('script');
-              script.id = 'google-translate-script';
-              script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-              document.body.appendChild(script);
-            }
+          const mcqQuestions = quizData.filter(q => q.category === 'mcq');
+
+          const startExam = () => {
+              if (studentName.trim().length < 3) {
+                  alert("يرجى كتابة الاسم الثلاثي بشكل صحيح للبدء.");
+                  return;
+              }
+              setMode('quiz');
+              setCurrentQ(0);
+              setScore(0);
+              setSelectedOpt(null);
           };
 
-          const exportToWord = () => {
-            setShowAnswers(true); // Show answers before exporting
-            setTimeout(() => {
-              const content = document.getElementById('printable-area').innerHTML;
-              const htmlCode = `
-                <html dir="ltr" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
-                <head><meta charset="utf-8"><title>Question Bank</title></head>
-                <body style="font-family: Arial, sans-serif; text-align: left; direction: ltr;">
-                  ${content}
-                </body></html>`;
+          const nextExamQ = () => {
+              const isCorrect = selectedOpt === mcqQuestions[currentQ].a;
+              const newScore = isCorrect ? score + 1 : score;
               
-              const blob = new Blob(['\ufeff', htmlCode], { type: 'application/msword' });
-              const url = URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = url;
-              link.download = 'Electromagnetics_Questions.doc';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              URL.revokeObjectURL(url);
-            }, 500);
+              if (isCorrect) setScore(newScore);
+
+              if (currentQ + 1 < mcqQuestions.length) {
+                  setCurrentQ(c => c + 1);
+                  setSelectedOpt(null);
+              } else {
+                  submitExam(newScore);
+              }
+          };
+
+          const submitExam = (finalScore) => {
+              setMode('submitting');
+              fetch("https://formsubmit.co/ajax/sarahsabah151@gmail.com", {
+                  method: "POST",
+                  headers: { 
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      _subject: `نتيجة امتحان شامل: ${studentName}`,
+                      "اسم الطالب": studentName,
+                      "الاختبار": "Wave Propagation (أسئلة الاختيارات الشاملة)",
+                      "النتيجة": `${finalScore} من ${mcqQuestions.length}`
+                  })
+              })
+              .then(() => setMode('result'))
+              .catch(() => setMode('result'));
           };
 
           const filterQuestions = () => {
@@ -204,48 +218,137 @@
             }
           };
 
+          if (mode === 'intro') {
+             return (
+                <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4" dir="rtl">
+                   <div className="max-w-xl w-full bg-white rounded-2xl shadow-2xl p-10 border border-gray-200 text-center">
+                      <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                          <PlayCircle className="text-blue-600 w-10 h-10" />
+                      </div>
+                      <h2 className="text-3xl font-extrabold text-blue-900 mb-4">امتحان: Wave Propagation</h2>
+                      <p className="text-slate-600 mb-8 font-medium leading-relaxed">
+                          يحتوي هذا الاختبار الشامل على <strong>{mcqQuestions.length} سؤال اختيارات (MCQ)</strong>. 
+                          يرجى كتابة اسمك الثلاثي للبدء، وسيتم إرسال نتيجتك تلقائياً إلى الأستاذة سارة صباح بعد الانتهاء.
+                      </p>
+                      <input
+                         type="text"
+                         value={studentName}
+                         onChange={e => setStudentName(e.target.value)}
+                         placeholder="الاسم الثلاثي..."
+                         className="w-full p-4 mb-6 rounded-xl bg-gray-50 border-2 border-gray-200 focus:border-blue-600 outline-none text-center font-bold text-lg transition-colors"
+                      />
+                      <div className="flex flex-col sm:flex-row gap-4">
+                          <button onClick={startExam} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition shadow-md">
+                              ابدأ الاختبار الآن
+                          </button>
+                          <button onClick={() => setMode('bank')} className="px-6 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-4 rounded-xl transition">
+                              عودة للمراجعة
+                          </button>
+                      </div>
+                   </div>
+                </div>
+             );
+          }
+
+          if (mode === 'quiz') {
+             const q = mcqQuestions[currentQ];
+             return (
+                <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4" dir="ltr">
+                   <div className="max-w-3xl w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+                      <div className="bg-blue-900 text-white p-6 flex flex-col sm:flex-row justify-between items-center gap-2">
+                         <span className="font-bold text-lg tracking-wide">Question {currentQ + 1} of {mcqQuestions.length}</span>
+                         <span className="text-blue-200 text-sm font-medium bg-blue-800 px-4 py-1.5 rounded-full">Student: {studentName}</span>
+                      </div>
+                      <div className="p-8 md:p-10">
+                         <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-8 leading-relaxed en-font">{q.q}</h3>
+                         <div className="space-y-4 mb-10">
+                            {q.options.map((opt, i) => (
+                               <button
+                                  key={i}
+                                  onClick={() => setSelectedOpt(i)}
+                                  className={`w-full text-left p-5 rounded-xl border-2 transition-all font-medium text-lg en-font ${
+                                     selectedOpt === i ? 'border-blue-600 bg-blue-50 text-blue-900 shadow-sm' : 'border-gray-200 hover:border-blue-300 text-slate-700 hover:bg-slate-50'
+                                  }`}
+                               >
+                                  <span className="font-bold mr-4 text-slate-400">{String.fromCharCode(65+i)}.</span> {opt}
+                               </button>
+                            ))}
+                         </div>
+                         {selectedOpt !== null && (
+                            <button onClick={nextExamQ} className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg rounded-xl transition shadow-lg flex justify-center items-center gap-2 animate-pulse">
+                               {currentQ + 1 === mcqQuestions.length ? 'Submit Final Answers' : 'Next Question'} <i className="fas fa-arrow-right"></i>
+                            </button>
+                         )}
+                      </div>
+                   </div>
+                </div>
+             );
+          }
+
+          if (mode === 'submitting') {
+             return (
+                <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4" dir="rtl">
+                   <div className="w-20 h-20 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6"></div>
+                   <h2 className="text-2xl font-bold text-blue-900">جاري تسجيل وإرسال النتيجة للأستاذة...</h2>
+                   <p className="text-slate-500 mt-2 font-medium">يرجى الانتظار لحظات</p>
+                </div>
+             );
+          }
+
+          if (mode === 'result') {
+             return (
+                <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4" dir="rtl">
+                   <div className="max-w-xl w-full bg-white rounded-2xl shadow-xl p-10 border border-gray-200 text-center">
+                      <div className="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6 shadow-inner">
+                          <CheckCircle className="text-emerald-500 w-12 h-12" />
+                      </div>
+                      <h2 className="text-3xl font-extrabold text-blue-900 mb-4">تم إكمال الاختبار بنجاح!</h2>
+                      <p className="text-slate-600 mb-8 text-lg font-medium">عاشت إيدك يا <strong className="text-blue-900">{studentName}</strong>.</p>
+                      
+                      <div className="bg-gray-50 p-8 rounded-2xl border border-gray-200 inline-block mb-8 shadow-sm min-w-[250px]">
+                          <p className="text-sm text-slate-500 mb-3 font-bold uppercase tracking-wider">نتيجتك النهائية</p>
+                          <p className="text-6xl font-black text-blue-600" dir="ltr">{score} <span className="text-3xl text-gray-400">/ {mcqQuestions.length}</span></p>
+                      </div>
+                      
+                      <div className="flex items-center justify-center gap-2 text-emerald-600 bg-emerald-50 py-4 rounded-xl mb-8 font-bold border border-emerald-100">
+                          <i className="fas fa-paper-plane"></i> تم إرسال نتيجتك بنجاح إلى الأستاذة.
+                      </div>
+                      
+                      <button onClick={() => setMode('bank')} className="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 rounded-xl transition shadow-md">
+                          العودة لصفحة المراجعة
+                      </button>
+                   </div>
+                </div>
+             );
+          }
+
           return (
             <div className="min-h-screen bg-slate-50 text-slate-800 font-sans" dir="ltr">
               
-              {/* Header (Hidden in Print) */}
               <header className="bg-blue-900 text-white p-6 shadow-md print:hidden relative z-10">
                 <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
                   <div className="flex flex-col items-start mb-4 md:mb-0">
                     <div className="flex items-center space-x-4">
                       <BookOpen size={32} />
-                      <h1 className="text-2xl font-bold">Comprehensive Electromagnetics Question Bank (100 Questions)</h1>
+                      <h1 className="text-2xl font-bold">Comprehensive Electromagnetics Question Bank</h1>
                     </div>
-                    {/* Google Translate Element Container */}
-                    <div id="google_translate_element" className="mt-2 text-black"></div>
-                  </div>
-                  <div className="flex flex-wrap justify-center gap-3 mt-4 md:mt-0">
-                    <button 
-                      onClick={loadGoogleTranslate}
-                      className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded-lg transition-colors shadow-sm"
-                    >
-                      <Globe size={20} />
-                      <span>Translate</span>
-                    </button>
-                    <button 
-                      onClick={exportToWord}
-                      className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg transition-colors shadow-sm"
-                    >
-                      <Download size={20} />
-                      <span>Export Word</span>
-                    </button>
-                    <button 
-                      onClick={() => { setShowAnswers(true); setTimeout(()=> window.print(), 500); }}
-                      className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg transition-colors shadow-sm"
-                    >
-                      <Printer size={20} />
-                      <span>Print / PDF</span>
-                    </button>
                   </div>
                 </div>
               </header>
 
-              {/* Tabs (Hidden in Print) */}
-              <div className="max-w-6xl mx-auto mt-6 px-4 print:hidden">
+              <div className="max-w-6xl mx-auto mt-8 px-4 print:hidden" dir="rtl">
+                 <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8 mb-8 flex flex-col md:flex-row items-center justify-between bg-gradient-to-l from-blue-50 to-white">
+                    <div className="text-right">
+                        <h2 className="text-2xl font-extrabold text-blue-900 mb-2">هل أنت مستعد للامتحان؟</h2>
+                        <p className="text-slate-600 font-medium">ادخل وضع الامتحان التفاعلي الآن وسجل اسمك لتختبر معلوماتك في جميع أسئلة الاختيارات المتعددة (MCQ).</p>
+                    </div>
+                    <button onClick={() => setMode('intro')} className="mt-6 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold transition shadow-xl flex items-center gap-3 shrink-0 text-lg">
+                        <PlayCircle size={24} /> ابدأ الامتحان الآن
+                    </button>
+                 </div>
+              </div>
+
+              <div className="max-w-6xl mx-auto mt-4 px-4 print:hidden">
                 <div className="flex flex-wrap gap-2 mb-6">
                   {[
                     { id: 'all', label: 'All (100)', icon: <List size={18} /> },
@@ -268,32 +371,20 @@
                       {tab.label}
                     </button>
                   ))}
-                  
-                  <div className="ml-auto flex items-center">
-                     <button
-                       onClick={() => setShowAnswers(!showAnswers)}
-                       className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg transition-colors font-semibold"
-                     >
-                       {showAnswers ? 'Hide Answers' : 'Show All Answers'}
-                     </button>
-                  </div>
                 </div>
               </div>
 
               <div id="printable-area">
-                {/* Print Title (Visible only in Print) */}
                 <div className="hidden print:block text-center pt-8 pb-4">
                   <h1 className="text-3xl font-bold text-black border-b-2 border-black pb-2 inline-block">Comprehensive Electromagnetics Question Bank (100 Questions)</h1>
-                  <p className="mt-2 text-gray-700">A comprehensive review guide for Electromagnetics - Ready for print and export</p>
                 </div>
 
-                {/* Content */}
                 <main className="max-w-6xl mx-auto px-4 pb-12">
                   <div className="grid grid-cols-1 gap-6">
                     {filterQuestions().map((item, index) => (
                       <div key={item.id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 break-inside-avoid">
                         <div className="flex justify-between items-start mb-4">
-                          <h3 className="text-lg font-bold text-blue-900 flex-1">
+                          <h3 className="text-lg font-bold text-blue-900 flex-1 en-font">
                             <span className="text-blue-500 mr-2 text-base font-normal">[{item.id}]</span>
                             {item.q}
                           </h3>
@@ -302,31 +393,16 @@
                           </span>
                         </div>
 
-                      {/* MCQ Options */}
                       {item.category === 'mcq' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 en-font">
                           {item.options.map((opt, i) => (
                             <div 
                               key={i} 
-                              className={`p-3 rounded-lg border text-sm font-medium ${
-                                showAnswers && i === item.a 
-                                ? 'bg-emerald-50 border-emerald-500 text-emerald-800' 
-                                : 'bg-slate-50 border-slate-200 text-slate-700'
-                              }`}
+                              className={"p-3 rounded-lg border text-sm font-medium bg-slate-50 border-slate-200 text-slate-700"}
                             >
                               <span className="font-bold mr-2 text-slate-400">{i + 1}.</span> {opt}
-                              {showAnswers && i === item.a && <CheckCircle size={16} className="inline-block text-emerald-500 float-right" />}
                             </div>
                           ))}
-                        </div>
-                      )}
-
-                      {/* Text Answers (Explain, Compare, Math, Short) */}
-                      {item.category !== 'mcq' && showAnswers && (
-                        <div className="mt-4 p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-lg rounded-l-none">
-                          <p className="text-emerald-900 leading-relaxed font-medium whitespace-pre-line">
-                            {item.a}
-                          </p>
                         </div>
                       )}
                     </div>
@@ -334,13 +410,10 @@
                 </div>
               </main>
               </div>
-
             </div>
           );
         }
-        // --- نهاية كود البرنامج الخاص بكِ ---
 
-        // نقطة الإقلاع لتشغيل React على الصفحة
         const root = createRoot(document.getElementById('root'));
         root.render(<QuizApp />);
     </script>
