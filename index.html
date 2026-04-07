@@ -78,6 +78,7 @@
                 <a href="#hero" class="flex items-center px-6 md:px-8 bg-univ-accent text-white font-bold text-base md:text-lg">الرئيسية</a>
                 <a href="#about" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">السيرة الذاتية</a>
                 <a href="#publications" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">الأبحاث</a>
+                <a href="#online-lectures" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">المحاضرات الإلكترونية</a>
                 <a href="#teaching" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">التدريس</a>
                 <a href="#publications" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">منشورات</a>
                 <a href="#contact" class="flex items-center px-4 md:px-6 text-white hover:bg-white/10 font-medium text-base md:text-lg transition">تواصل</a>
@@ -158,6 +159,28 @@
             </div>
         </section>
 
+        <!-- قسم المحاضرات الإلكترونية (الجديد) -->
+        <section id="online-lectures" class="bg-emerald-50 rounded-3xl p-8 md:p-12 border border-emerald-100 shadow-md relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+                <div class="text-right">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="relative flex h-4 w-4">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500"></span>
+                        </span>
+                        <h3 class="text-3xl font-extrabold text-univ-dark">المحاضرات الإلكترونية (Online)</h3>
+                    </div>
+                    <p class="text-slate-600 text-lg">
+                        رابط الدخول المباشر للمحاضرات التفاعلية والمناقشات العلمية عبر منصة Google Meet.
+                    </p>
+                </div>
+                <a href="https://meet.google.com/tkv-cvqo-pbw" target="_blank" class="shrink-0 px-8 py-4 bg-emerald-600 text-white font-bold rounded-xl shadow-lg hover:bg-emerald-700 hover:-translate-y-1 transition-all duration-300 flex items-center gap-3 text-lg">
+                    <i class="fas fa-video"></i> انضم للمحاضرة الآن
+                </a>
+            </div>
+        </section>
+
         <section id="teaching" class="bg-slate-50 rounded-3xl p-8 md:p-12 border border-gray-100">
             <div class="text-center mb-10">
                 <h3 class="text-3xl font-extrabold text-univ-dark flex items-center justify-center gap-3">
@@ -174,6 +197,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
+                <!-- Wave Propagation (Interactive) -->
                 <div class="course-card bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden border border-gray-100 flex flex-col">
                     <div class="flex items-center justify-between mb-4 relative z-10">
                         <i class="course-icon fas fa-broadcast-tower text-4xl text-univ-dark transition-all duration-300"></i>
@@ -230,7 +254,7 @@
                     </div>
                     <h4 class="font-extrabold text-xl text-univ-dark mb-2">الفصل الثامن</h4>
                     <p class="text-sm text-slate-600 mb-6 flex-grow" dir="ltr" style="text-align: right;">Magnetic Forces, Materials, and Devices</p>
-                    <a href="electromagnetics1.pdf.pdf" target="_blank" class="w-full py-2.5 bg-gray-50 hover:bg-red-500 hover:text-white text-slate-700 font-bold rounded-lg transition border border-gray-200 flex items-center justify-center gap-2">
+                    <a href="Electromagnetics1.pdf" target="_blank" class="w-full py-2.5 bg-gray-50 hover:bg-red-500 hover:text-white text-slate-700 font-bold rounded-lg transition border border-gray-200 flex items-center justify-center gap-2">
                         <i class="fas fa-eye"></i> عرض الملف (PDF)
                     </a>
                 </div>
@@ -264,7 +288,6 @@
                         <i class="fas fa-map-marker-alt text-xl text-univ-accent w-8 text-center"></i>
                         <span>جامعة دجلة، كلية الهندسة - بغداد، العراق</span>
                     </div>
-                    <!-- تمت إضافة الإيميل هنا ليكون ظاهراً -->
                     <div class="flex items-center gap-4">
                         <i class="fas fa-envelope text-xl text-univ-accent w-8 text-center"></i>
                         <span dir="ltr" class="font-medium">sarahsabah151@gmail.com</span>
@@ -272,9 +295,7 @@
                 </div>
             </div>
 
-            <!-- نموذج التواصل المربوط بـ FormSubmit -->
             <form action="https://formsubmit.co/sarahsabah151@gmail.com" method="POST" class="md:col-span-7 bg-white p-8 rounded-2xl shadow-lg space-y-5 text-slate-900 relative z-10">
-                <!-- إعدادات إضافية لتجنب صفحة الكابتشا المزعجة ولتحديد عنوان الرسالة -->
                 <input type="hidden" name="_subject" value="رسالة جديدة من البوابة الأكاديمية">
                 <input type="hidden" name="_captcha" value="false">
                 
