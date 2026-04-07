@@ -32,8 +32,8 @@
 
     <script type="text/babel" data-type="module">
         import { createRoot } from 'react-dom/client';
-        import React, { useState } from 'react';
-        import { BookOpen, CheckCircle, FileText, List, HelpCircle, Sigma, GitCompare, Globe, PlayCircle } from 'lucide-react';
+        import React, { useState, useEffect } from 'react';
+        import { BookOpen, CheckCircle, FileText, List, HelpCircle, Sigma, GitCompare, PlayCircle, Clock } from 'lucide-react';
 
         const quizData = [
           // ================= 60 MCQ Questions =================
@@ -98,7 +98,7 @@
           { id: 59, category: 'mcq', q: "Mutual Inductance between two circuits (in the absence of ferromagnetic materials) is characterized by:", options: ["M12 > M21", "M12 < M21", "M12 = M21", "M12 = 0"], a: 2 },
           { id: 60, category: 'mcq', q: "Which of the following equations represents Ohm's Law for magnetic circuits?", options: ["V = I R", "F = m a", "mmf = Flux × Reluctance (F = ψ R)", "B = μ H"], a: 2 },
 
-          // ================= 10 Explanation Questions =================
+          // ================= Explanation & Other Questions (Review Only) =================
           { id: 61, category: 'explain', q: "Explain the concept of 'Retardation Effect' in electromagnetic fields.", a: "It is the time delay between a change in the sources of the field (charges and currents) and the time this change is felt at a distant point in space. This happens because electromagnetic waves travel at a finite speed (the speed of light c)." },
           { id: 62, category: 'explain', q: "State the main difference between static and dynamic fields.", a: "Static fields do not change with time (frequency = zero) and do not generate radiated waves. Dynamic fields vary with time, support the propagation of electromagnetic waves, and in them, the electric and magnetic fields are coupled." },
           { id: 63, category: 'explain', q: "What is the physical interpretation of Faraday's Law (∇ × E = -∂B/∂t)?", a: "It states that any time-varying magnetic field induces a circulating electric field. This is the fundamental working principle behind electric generators." },
@@ -109,8 +109,6 @@
           { id: 68, category: 'explain', q: "What is 'Brewster's Angle'?", a: "It is the angle of incidence at which the reflectivity is entirely zero for a parallel-polarized wave (TM or P-polarization), and the wave is fully transmitted into the second medium." },
           { id: 69, category: 'explain', q: "What is meant by an 'Evanescent Wave'?", a: "It is a wave that forms during total internal reflection, propagating along the boundary between the two media, while its amplitude decays exponentially and very rapidly in the direction normal to the surface into the second medium." },
           { id: 70, category: 'explain', q: "Explain the analogies between an electric circuit and a magnetic circuit.", a: "In electricity, we use electromotive force (emf), which corresponds to magnetomotive force (mmf) in magnetism. Current (I) corresponds to Flux (ψ). Resistance (R) corresponds to Reluctance (ℛ). Ohm's Law (V=IR) corresponds to Hopkinson's Law (mmf = ψℛ)." },
-
-          // ================= 10 Comparison Questions =================
           { id: 71, category: 'compare', q: "Compare Conduction Current and Displacement Current.", a: "Conduction Current (Jc = σE) results from the movement of free electrons in conductors. Displacement Current (Jd = ∂D/∂t) results from a time-varying electric field and occurs even in dielectrics and vacuums." },
           { id: 72, category: 'compare', q: "Compare TE polarization and TM polarization.", a: "In TE (or S) polarization: The electric field is perpendicular to the plane of incidence. In TM (or P) polarization: The electric field is parallel to the plane of incidence." },
           { id: 73, category: 'compare', q: "Compare Phase Velocity and Group Velocity.", a: "Phase Velocity (Vp = ω/k) is the speed at which a point of constant phase travels in a wave. Group Velocity (Vg = dω/dk) is the speed at which the wave envelope (information/energy) travels in a dispersive medium." },
@@ -121,8 +119,6 @@
           { id: 78, category: 'compare', q: "Compare Dispersive and Non-dispersive media.", a: "Non-dispersive: Wave speed is constant for all frequencies (Vg = Vp). Dispersive: Wave speed depends on the frequency (Vg ≠ Vp), which causes signal distortion." },
           { id: 79, category: 'compare', q: "Compare wave propagation in Free Space and in a Good Conductor.", a: "In Free space: No attenuation (α=0), wave speed equals c. In a Good Conductor: High attenuation (large α), wave decays rapidly (Skin depth), and wave speed is much less than c." },
           { id: 80, category: 'compare', q: "Compare Magnetic Reluctance and Electrical Resistance.", a: "Resistance (R = l/σS) opposes current flow and dissipates energy (heat). Reluctance (ℛ = l/μS) opposes the path of magnetic flux but does not continuously dissipate energy; rather, energy is stored." },
-
-          // ================= 10 Math Questions =================
           { id: 81, category: 'math', q: "A charge with mass 1.7e-27 kg and magnitude 1.6e-19 C is moving at a velocity of 83.5 km/s perpendicularly to a 5 mT magnetic field. Calculate the magnetic force.", a: "Solution: F = Q * u * B = (1.6e-19) * (83.5e3) * (5e-3) = 6.68 × 10^-17 Newtons." },
           { id: 82, category: 'math', q: "Find the cross product A × B for the vectors: A = 2ax - 3ay + az and B = -4ax - 2ay + 5az.", a: "Solution: Using the determinant matrix, the result is: A × B = -13ax - 14ay - 16az." },
           { id: 83, category: 'math', q: "Convert the point (1, 3, 2) from the Cartesian system to the Spherical system (r, θ, φ).", a: "Solution: r = √(1^2+3^2+2^2) = 3.74. Angle θ = cos^-1(2/3.74) = 57.69°. Angle φ = tan^-1(3/1) = 71.57°." },
@@ -133,8 +129,6 @@
           { id: 88, category: 'math', q: "Find the magnetic torque (T) on a loop with a dipole moment m = 10 az in a field B = 2.5 ax.", a: "Solution: T = m × B = 10 az × 2.5 ax = 25 ay N.m." },
           { id: 89, category: 'math', q: "Calculate the electric energy density (UE) for an electric field E = 100 V/m in a vacuum.", a: "Solution: UE = 0.5 * εo * E^2 = 0.5 * 8.854e-12 * (100)^2 = 4.425 × 10^-8 Joules/m^3." },
           { id: 90, category: 'math', q: "What is the magnitude of the vector G = 2ax - 2ay - az?", a: "Solution: |G| = √(2^2 + (-2)^2 + (-1)^2) = √(4 + 4 + 1) = √9 = 3." },
-
-          // ================= 10 Short Q&A Questions =================
           { id: 91, category: 'short', q: "What is the unit of measurement for Magnetic Flux?", a: "Magnetic flux is measured in Webers (Wb)." },
           { id: 92, category: 'short', q: "Which law primarily relates electric current to the magnetic field it produces?", a: "Ampere's Law and the Biot-Savart Law." },
           { id: 93, category: 'short', q: "Does the magnetic force perform work on a moving charge? Why?", a: "No, because the magnetic force always acts perpendicularly to the direction of the charge's velocity." },
@@ -155,8 +149,34 @@
           const [currentQ, setCurrentQ] = useState(0);
           const [score, setScore] = useState(0);
           const [selectedOpt, setSelectedOpt] = useState(null);
+          
+          // إضافة متغير المؤقت الزمني (60 ثانية)
+          const [timeLeft, setTimeLeft] = useState(60);
 
           const mcqQuestions = quizData.filter(q => q.category === 'mcq');
+
+          // تأثير المؤقت (يعمل فقط في وضع الامتحان)
+          useEffect(() => {
+              if (mode === 'quiz') {
+                  if (timeLeft <= 0) {
+                      // إذا انتهى الوقت، انتقل للسؤال التالي بدون إضافة نقاط
+                      handleTimeUp();
+                  } else {
+                      const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+                      return () => clearTimeout(timerId);
+                  }
+              }
+          }, [timeLeft, mode]);
+
+          const handleTimeUp = () => {
+              if (currentQ + 1 < mcqQuestions.length) {
+                  setCurrentQ(c => c + 1);
+                  setSelectedOpt(null);
+                  setTimeLeft(60); // إعادة تعيين الوقت للسؤال الجديد
+              } else {
+                  submitExam(score);
+              }
+          };
 
           const startExam = () => {
               if (studentName.trim().length < 3) {
@@ -167,10 +187,12 @@
               setCurrentQ(0);
               setScore(0);
               setSelectedOpt(null);
+              setTimeLeft(60); // بدء المؤقت بـ 60 ثانية
           };
 
           const nextExamQ = () => {
-              const isCorrect = selectedOpt === mcqQuestions[currentQ].a;
+              // إذا لم يقم الطالب باختيار أي إجابة، سيعتبر خاطئاً ولن تضاف نقاط
+              const isCorrect = selectedOpt !== null && selectedOpt === mcqQuestions[currentQ].a;
               const newScore = isCorrect ? score + 1 : score;
               
               if (isCorrect) setScore(newScore);
@@ -178,6 +200,7 @@
               if (currentQ + 1 < mcqQuestions.length) {
                   setCurrentQ(c => c + 1);
                   setSelectedOpt(null);
+                  setTimeLeft(60); // إعادة تعيين الوقت للسؤال الجديد
               } else {
                   submitExam(newScore);
               }
@@ -228,7 +251,8 @@
                       <h2 className="text-3xl font-extrabold text-blue-900 mb-4">امتحان: Wave Propagation</h2>
                       <p className="text-slate-600 mb-8 font-medium leading-relaxed">
                           يحتوي هذا الاختبار الشامل على <strong>{mcqQuestions.length} سؤال اختيارات (MCQ)</strong>. 
-                          يرجى كتابة اسمك الثلاثي للبدء، وسيتم إرسال نتيجتك تلقائياً إلى الأستاذة سارة صباح بعد الانتهاء.
+                          الرجاء الانتباه: لديك <strong>دقيقة واحدة (60 ثانية)</strong> للإجابة على كل سؤال، وإذا انتهى الوقت سيعتبر السؤال خاطئاً! 
+                          سيتم إرسال نتيجتك تلقائياً إلى الأستاذة بعد الانتهاء.
                       </p>
                       <input
                          type="text"
@@ -255,8 +279,17 @@
              return (
                 <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4" dir="ltr">
                    <div className="max-w-3xl w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-                      <div className="bg-blue-900 text-white p-6 flex flex-col sm:flex-row justify-between items-center gap-2">
+                      <div className="bg-blue-900 text-white p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                          <span className="font-bold text-lg tracking-wide">Question {currentQ + 1} of {mcqQuestions.length}</span>
+                         
+                         {/* عداد الوقت المرئي */}
+                         <div className={`flex items-center gap-2 px-5 py-2 rounded-full border-2 ${timeLeft <= 10 ? 'border-red-500 bg-red-500 text-white animate-pulse' : 'border-blue-400 bg-blue-800'}`}>
+                             <Clock size={20} />
+                             <span className="font-bold text-lg tracking-widest" dir="ltr">
+                                 00:{timeLeft < 10 ? `0${timeLeft}` : timeLeft}
+                             </span>
+                         </div>
+
                          <span className="text-blue-200 text-sm font-medium bg-blue-800 px-4 py-1.5 rounded-full">Student: {studentName}</span>
                       </div>
                       <div className="p-8 md:p-10">
@@ -274,11 +307,15 @@
                                </button>
                             ))}
                          </div>
-                         {selectedOpt !== null && (
-                            <button onClick={nextExamQ} className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg rounded-xl transition shadow-lg flex justify-center items-center gap-2 animate-pulse">
-                               {currentQ + 1 === mcqQuestions.length ? 'Submit Final Answers' : 'Next Question'} <i className="fas fa-arrow-right"></i>
-                            </button>
-                         )}
+                         
+                         {/* يظهر زر "السؤال التالي" إما بعد اختيار الطالب إجابة، أو يمكنه تجاوزه باختيار ترك الإجابة */}
+                         <button onClick={nextExamQ} className={`w-full py-4 font-bold text-lg rounded-xl transition shadow-lg flex justify-center items-center gap-2 ${selectedOpt !== null ? 'bg-emerald-600 hover:bg-emerald-700 text-white animate-pulse' : 'bg-gray-300 hover:bg-gray-400 text-gray-700'}`}>
+                            {selectedOpt !== null 
+                                ? (currentQ + 1 === mcqQuestions.length ? 'Submit Final Answers' : 'Next Question') 
+                                : 'Skip / Next Question'} 
+                            <i className="fas fa-arrow-right"></i>
+                         </button>
+                         
                       </div>
                    </div>
                 </div>
@@ -325,7 +362,7 @@
           return (
             <div className="min-h-screen bg-slate-50 text-slate-800 font-sans" dir="ltr">
               
-              <header className="bg-blue-900 text-white p-6 shadow-md print:hidden relative z-10">
+              <header className="bg-blue-900 text-white p-6 shadow-md relative z-10">
                 <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
                   <div className="flex flex-col items-start mb-4 md:mb-0">
                     <div className="flex items-center space-x-4">
@@ -336,7 +373,7 @@
                 </div>
               </header>
 
-              <div className="max-w-6xl mx-auto mt-8 px-4 print:hidden" dir="rtl">
+              <div className="max-w-6xl mx-auto mt-8 px-4" dir="rtl">
                  <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8 mb-8 flex flex-col md:flex-row items-center justify-between bg-gradient-to-l from-blue-50 to-white">
                     <div className="text-right">
                         <h2 className="text-2xl font-extrabold text-blue-900 mb-2">هل أنت مستعد للامتحان؟</h2>
@@ -348,7 +385,7 @@
                  </div>
               </div>
 
-              <div className="max-w-6xl mx-auto mt-4 px-4 print:hidden">
+              <div className="max-w-6xl mx-auto mt-4 px-4">
                 <div className="flex flex-wrap gap-2 mb-6">
                   {[
                     { id: 'all', label: 'All (100)', icon: <List size={18} /> },
@@ -374,8 +411,8 @@
                 </div>
               </div>
 
-              <div id="printable-area">
-                <div className="hidden print:block text-center pt-8 pb-4">
+              <div>
+                <div className="text-center pt-8 pb-4">
                   <h1 className="text-3xl font-bold text-black border-b-2 border-black pb-2 inline-block">Comprehensive Electromagnetics Question Bank (100 Questions)</h1>
                 </div>
 
@@ -388,7 +425,7 @@
                             <span className="text-blue-500 mr-2 text-base font-normal">[{item.id}]</span>
                             {item.q}
                           </h3>
-                          <span className="bg-slate-100 text-slate-500 text-xs px-2 py-1 rounded-md ml-4 print:hidden whitespace-nowrap">
+                          <span className="bg-slate-100 text-slate-500 text-xs px-2 py-1 rounded-md ml-4 whitespace-nowrap">
                             {getCategoryTitle(item.category)}
                           </span>
                         </div>
